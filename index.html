@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 1 — Google Sheets Fundamentals</title>
+<style>
+:root{--navy:#17324d;--green:#1f7a5a;--light:#eef8f3;--bg:#f6f8fa;--white:#fff;--line:#dbe4eb;--muted:#64748b;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--navy);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+header{background:var(--navy);color:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20}
+.brand{font-weight:800}.module-label{font-size:.9rem;opacity:.85}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:auto;min-height:calc(100vh - 70px)}
+aside{background:white;border-right:1px solid var(--line);padding:25px 18px;position:sticky;top:70px;height:calc(100vh - 70px);overflow:auto}
+aside h3{margin:0 0 15px}.lesson-btn{width:100%;text-align:left;border:0;background:white;padding:11px 12px;border-radius:8px;margin:3px 0;cursor:pointer;color:var(--navy)}
+.lesson-btn:hover{background:#f1f6f4}.lesson-btn.active{background:var(--light);color:var(--green);font-weight:800}.lesson-btn.done:before{content:"✓ ";color:var(--green);font-weight:bold}
+.progress-wrap{margin:15px 0 22px}.progress{height:9px;background:#e8edf1;border-radius:10px;overflow:hidden}.bar{height:100%;width:0;background:var(--green);transition:.3s}
+main{padding:42px 6%;max-width:950px;width:100%;margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:1.2px;color:var(--green);font-size:.8rem;font-weight:800}
+h1{font-size:2.6rem;line-height:1.1;margin:8px 0 14px}h2{font-size:1.7rem;margin-top:0}h3{margin-top:0}
+.lead{color:var(--muted);font-size:1.08rem}
+.card{background:white;border:1px solid var(--line);border-radius:15px;padding:25px;margin:20px 0;box-shadow:0 8px 25px #17324d0b}
+.callout{background:var(--light);border-left:5px solid var(--green);padding:17px;border-radius:8px;margin:20px 0}
+table{width:100%;border-collapse:collapse;margin:18px 0}th,td{padding:11px;border:1px solid var(--line);text-align:left}th{background:#f2f5f7}
+pre{background:#132536;color:white;padding:15px;border-radius:9px;overflow:auto}.code{font-family:Consolas,monospace}
+.question{padding:18px 0;border-top:1px solid var(--line)}.question:first-child{border-top:0}
+.option{display:block;width:100%;text-align:left;background:white;border:1px solid var(--line);padding:11px 13px;border-radius:8px;margin:8px 0;cursor:pointer}.option:hover{border-color:var(--green)}.option.selected{border-color:var(--green);background:var(--light)}
+.feedback{margin-top:10px;font-weight:700}.correct{color:var(--green)}.incorrect{color:var(--danger)}
+input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:1rem}
+button.primary,.nav-actions button{background:var(--green);color:white;border:0;border-radius:8px;padding:12px 18px;font-weight:800;cursor:pointer}
+button.secondary{background:white;color:var(--green);border:1px solid var(--green);border-radius:8px;padding:11px 17px;font-weight:800;cursor:pointer}
+.nav-actions{display:flex;justify-content:space-between;gap:10px;margin-top:28px}
+.nav-actions button:disabled{opacity:.4;cursor:not-allowed}
+.badge{display:inline-block;background:var(--light);color:var(--green);padding:5px 10px;border-radius:20px;font-size:.8rem;font-weight:800}
+.quiz-score{font-size:1.3rem;font-weight:800;margin-top:18px}
+.completion{display:none;text-align:center;background:var(--light);padding:25px;border-radius:14px;margin-top:25px}.completion.show{display:block}
+@media(max-width:800px){.layout{grid-template-columns:1fr}aside{position:relative;top:0;height:auto;border-right:0;border-bottom:1px solid var(--line)}header{position:relative}main{padding:30px 5%}h1{font-size:2.1rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">📊 Google Sheets Learning Hub</div>
+  <div class="module-label">Module 1 · Fundamentals</div>
+</header>
+
+<div class="layout">
+<aside>
+<h3>Module 1</h3>
+<div class="progress-wrap">
+  <div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:7px"><span>Progress</span><b id="progressText">0%</b></div>
+  <div class="progress"><div class="bar" id="progressBar"></div></div>
+</div>
+<div id="lessonNav"></div>
+</aside>
+
+<main id="content"></main>
+</div>
+
+<script>
+const lessons=[
+{id:"1.1",title:"What Is Google Sheets?",type:"lesson"},
+{id:"1.2",title:"Rows, Columns & Cells",type:"lesson"},
+{id:"1.3",title:"Cell Addresses & Ranges",type:"lesson"},
+{id:"1.4",title:"Navigating a Workbook",type:"lesson"},
+{id:"1.5",title:"Creating & Organizing Sheets",type:"lesson"},
+{id:"1.6",title:"Freeze, Hide & Resize",type:"lesson"},
+{id:"1.7",title:"Module Practice Project",type:"practice"},
+{id:"1.8",title:"Module Quiz",type:"quiz"}
+];
+
+const pages={
+"1.1":`
+<span class="eyebrow">Lesson 1.1</span><h1>What Is Google Sheets?</h1>
+<p class="lead">Learn what Google Sheets is, where it is used, and why it is useful for data work.</p>
+<div class="card"><h2>🎯 Learning Objectives</h2><ul><li>Explain what Google Sheets is.</li><li>Identify common uses.</li><li>Understand how Sheets can support data analysis.</li></ul></div>
+<div class="card"><h2>📖 Learn</h2><p><b>Google Sheets</b> is a web-based spreadsheet application from Google. It can be used to organize information, perform calculations, analyze data, create charts, and collaborate with others.</p>
+<p>It can be used for everyday tasks such as budgets and lists, as well as professional tasks such as sales tracking, customer records and data analysis.</p></div>
+<div class="card"><h2>👀 See It</h2><table><tr><th>Product</th><th>Sales</th><th>Profit</th></tr><tr><td>Laptop</td><td>₱50,000</td><td>₱15,000</td></tr><tr><td>Phone</td><td>₱30,000</td><td>₱10,000</td></tr><tr><td>Tablet</td><td>₱25,000</td><td>₱7,000</td></tr></table><p>Later, we can calculate total sales with:</p><pre>=SUM(B2:B4)</pre></div>
+<div class="card"><h2>✏️ Quick Check</h2><p>Which is a common use of Google Sheets?</p><button class="option" onclick="check(this,true,'q11')">A. Tracking sales</button><button class="option" onclick="check(this,false,'q11')">B. Editing a movie</button><button class="option" onclick="check(this,false,'q11')">C. Browsing websites</button><div id="q11" class="feedback"></div></div>
+<div class="card"><h2>💻 Try It</h2><p>Open Google Sheets and create a blank spreadsheet. Enter the three products shown above with their sales and profit.</p><button class="primary" onclick="markCurrent()">Mark Lesson Complete</button></div>`,
+
+"1.2":`
+<span class="eyebrow">Lesson 1.2</span><h1>Understanding Rows, Columns & Cells</h1>
+<p class="lead">These are the basic building blocks of every spreadsheet.</p>
+<div class="card"><h2>📖 Learn</h2><p>A <b>cell</b> is one individual box. A <b>column</b> runs vertically and is identified by letters. A <b>row</b> runs horizontally and is identified by numbers.</p>
+<table><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr><th>1</th><td>Product</td><td>Sales</td><td>Profit</td></tr><tr><th>2</th><td>Laptop</td><td>50,000</td><td>15,000</td></tr><tr><th>3</th><td>Phone</td><td>30,000</td><td>10,000</td></tr></table></div>
+<div class="callout"><b>Remember:</b> Columns use letters. Rows use numbers. A cell address combines them, such as <b>B2</b>.</div>
+<div class="card"><h2>🧩 Practice</h2><p>What is the cell containing <b>30,000</b>?</p><button class="option" onclick="check(this,false,'q12')">A. A3</button><button class="option" onclick="check(this,true,'q12')">B. B3</button><button class="option" onclick="check(this,false,'q12')">C. C2</button><div id="q12" class="feedback"></div><hr><p>Which direction do columns run?</p><button class="option" onclick="check(this,true,'q13')">A. Vertical</button><button class="option" onclick="check(this,false,'q13')">B. Horizontal</button><div id="q13" class="feedback"></div></div>
+<div class="card"><h2>💻 Try It</h2><p>Create the table above in Google Sheets. Click several cells and observe the column letter and row number.</p><button class="primary" onclick="markCurrent()">Mark Lesson Complete</button></div>`,
+
+"1.3":`
+<span class="eyebrow">Lesson 1.3</span><h1>Cell Addresses & Ranges</h1>
+<p class="lead">Ranges allow you to work with groups of cells and are essential for formulas.</p>
+<div class="card"><h2>📖 Learn</h2><p>A cell address identifies one cell:</p><pre>A1
+B7
+C10</pre><p>A range identifies multiple cells:</p><pre>A1:A10
+A1:C10</pre><p><b>A1:A10</b> means cells A1 through A10. <b>A1:C10</b> covers columns A through C and rows 1 through 10.</p></div>
+<div class="card"><h2>💼 Why Ranges Matter</h2><p>Many functions work with ranges. For example:</p><pre>=SUM(B2:B10)</pre><p>This tells Sheets to add the numbers from B2 through B10.</p></div>
+<div class="card"><h2>🧠 Practice</h2><p>For a dataset in A2:C5, which range contains the complete dataset?</p><button class="option" onclick="check(this,false,'q14')">A. A2:A5</button><button class="option" onclick="check(this,false,'q14')">B. B2:C5</button><button class="option" onclick="check(this,true,'q14')">C. A2:C5</button><div id="q14" class="feedback"></div><hr><p>Which range represents all sales in column B, rows 2 through 20?</p><button class="option" onclick="check(this,true,'q15')">A. B2:B20</button><button class="option" onclick="check(this,false,'q15')">B. A2:A20</button><button class="option" onclick="check(this,false,'q15')">C. B1:C20</button><div id="q15" class="feedback"></div></div>
+<div class="card"><h2>✏️ Challenge</h2><p>In Google Sheets, create a 4-column by 6-row table and practice selecting a single cell, a column range and a rectangular range.</p><button class="primary" onclick="markCurrent()">Mark Lesson Complete</button></div>`,
+
+"1.4":`
+<span class="eyebrow">Lesson 1.4</span><h1>Navigating a Google Sheets Workbook</h1>
+<p class="lead">Learn the parts of the Google Sheets interface that you will use throughout the course.</p>
+<div class="card"><h2>🔎 Know Your Workspace</h2><ul><li><b>Spreadsheet title</b> — identifies your file.</li><li><b>Menu bar</b> — commands and features.</li><li><b>Toolbar</b> — common formatting actions.</li><li><b>Formula bar</b> — view or edit cell contents and formulas.</li><li><b>Name box</b> — shows the active cell or selected range.</li><li><b>Rows and columns</b> — organize the grid.</li><li><b>Sheet tabs</b> — move between worksheets.</li></ul></div>
+<div class="card"><h2>💻 Guided Practice</h2><ol><li>Open a blank Google Sheet.</li><li>Click A1.</li><li>Click C5.</li><li>Select A1:C5.</li><li>Click a row number.</li><li>Click a column letter.</li><li>Add another sheet.</li></ol><p><b>Goal:</b> Become comfortable clicking around without worrying about making mistakes.</p><button class="primary" onclick="markCurrent()">Mark Lesson Complete</button></div>`,
+
+"1.5":`
+<span class="eyebrow">Lesson 1.5</span><h1>Creating & Organizing Sheets</h1>
+<p class="lead">Learn how to structure a workbook so related information stays organized.</p>
+<div class="card"><h2>📖 Learn</h2><p>A workbook can contain multiple sheets. For example, a small business workbook might use:</p><table><tr><th>Sheet</th><th>Purpose</th></tr><tr><td>Sales</td><td>Transactions</td></tr><tr><td>Customers</td><td>Customer details</td></tr><tr><td>Products</td><td>Product information</td></tr></table><p>You can add, rename, duplicate, move and delete sheets.</p></div>
+<div class="card"><h2>🧩 Practice</h2><p>Create three sheets and name them:</p><ol><li>Sales</li><li>Customers</li><li>Products</li></ol><p>Then change the tab colors and move the sheets into that order.</p><button class="primary" onclick="markCurrent()">Mark Lesson Complete</button></div>`,
+
+"1.6":`
+<span class="eyebrow">Lesson 1.6</span><h1>Freeze, Hide & Resize</h1>
+<p class="lead">Use these tools to make a spreadsheet easier to read and work with.</p>
+<div class="card"><h2>📌 Freeze</h2><p>Freezing a row or column keeps it visible while you scroll. A common practice is to freeze the header row of a dataset.</p><h2>↔️ Resize</h2><p>Resize columns and rows so information is readable and the sheet is easy to scan.</p><h2>👁️ Hide / Unhide</h2><p>Temporarily hide rows or columns when they are not needed on screen.</p></div>
+<div class="card"><h2>💻 Guided Practice</h2><ol><li>Create a dataset with at least 10 rows.</li><li>Freeze row 1.</li><li>Resize each column.</li><li>Hide one column.</li><li>Unhide it.</li></ol><button class="primary" onclick="markCurrent()">Mark Lesson Complete</button></div>`,
+
+"1.7":`
+<span class="eyebrow">Lesson 1.7</span><h1>Module Practice Project</h1>
+<p class="lead">Put the fundamentals together in a realistic sales-tracking task.</p>
+<div class="card"><h2>💼 Business Scenario</h2><p>You have been asked to create a simple sales tracking spreadsheet for a small electronics business.</p>
+<table><tr><th>Order ID</th><th>Product</th><th>Category</th><th>Region</th><th>Sales</th></tr>
+<tr><td>1001</td><td>Laptop</td><td>Electronics</td><td>Manila</td><td>50000</td></tr>
+<tr><td>1002</td><td>Phone</td><td>Electronics</td><td>Davao</td><td>30000</td></tr>
+<tr><td>1003</td><td>Tablet</td><td>Electronics</td><td>Cebu</td><td>25000</td></tr>
+<tr><td>1004</td><td>Monitor</td><td>Electronics</td><td>Manila</td><td>20000</td></tr>
+<tr><td>1005</td><td>Keyboard</td><td>Accessories</td><td>Davao</td><td>8000</td></tr>
+<tr><td>1006</td><td>Mouse</td><td>Accessories</td><td>Cebu</td><td>5000</td></tr>
+<tr><td>1007</td><td>Laptop</td><td>Electronics</td><td>Davao</td><td>55000</td></tr>
+<tr><td>1008</td><td>Phone</td><td>Electronics</td><td>Manila</td><td>32000</td></tr>
+<tr><td>1009</td><td>Monitor</td><td>Electronics</td><td>Cebu</td><td>22000</td></tr>
+<tr><td>1010</td><td>Keyboard</td><td>Accessories</td><td>Manila</td><td>7500</td></tr></table></div>
+<div class="card"><h2>✅ Student Tasks</h2><ol><li>Create a sheet named <b>Sales_Data</b>.</li><li>Enter the dataset.</li><li>Format the header.</li><li>Freeze row 1.</li><li>Adjust column widths.</li><li>Find the cell containing Davao for Order ID 1007.</li><li>Find the range containing all Sales values.</li><li>Find the complete data range excluding the header.</li></ol></div>
+<div class="card"><h2>🔍 Self-Check</h2><p>For the dataset above:</p><ul><li>Davao for Order 1007 is <b>D7</b>.</li><li>Sales values are <b>E2:E11</b>.</li><li>Complete data excluding the header is <b>A2:E11</b>.</li></ul><button class="primary" onclick="markCurrent()">Mark Practice Complete</button></div>`,
+
+"1.8":`
+<span class="eyebrow">Lesson 1.8</span><h1>Module 1 Final Quiz</h1>
+<p class="lead">Test your understanding. You need at least 80% to pass this module.</p>
+<div id="quiz"></div>
+<button class="primary" onclick="gradeQuiz()">Submit Quiz</button>
+<div id="score" class="quiz-score"></div>
+<div id="completion" class="completion"><h2>🎉 Module 1 Complete!</h2><p>You have completed Google Sheets Fundamentals.</p><p><b>Next:</b> Module 2 — Data Entry & Formatting</p></div>`
+};
+
+const quiz=[
+["What is a cell?","An individual box in a spreadsheet",["A whole worksheet","An individual box in a spreadsheet","A column only","A file"],1],
+["Which identifies column B, row 5?","B5",["5B","B5","BB","2:5"],1],
+["Which is a range?","A2:C10",["A2","C","A2:C10","Row 2"],2],
+["Rows run in which direction?","Horizontal",["Vertical","Horizontal","Diagonal","Circular"],1],
+["Columns run in which direction?","Vertical",["Vertical","Horizontal","Diagonal","Circular"],0],
+["What does =SUM(B2:B10) do?","Adds values in B2 through B10",["Deletes B2:B10","Adds values in B2 through B10","Sorts B2:B10","Hides B2:B10"],1],
+["Why freeze a header row?","To keep headings visible while scrolling",["To delete it","To change its color","To keep headings visible while scrolling","To lock the file"],2],
+["Which sheet structure is sensible for a sales workbook?","Sales, Customers, Products",["Sales, Music, Photos","Sales, Customers, Products","Games, Movies, Sales","One sheet only"],1],
+["What is the complete data range if data occupies A2:E11?","A2:E11",["A1:E1","A2:A11","B2:E11","A2:E11"],3],
+["What is Google Sheets useful for?","Organizing, calculating and analyzing data",["Only drawing","Only email","Organizing, calculating and analyzing data","Only video editing"],2]
+];
+
+function renderNav(){
+ const nav=document.getElementById("lessonNav");
+ nav.innerHTML=lessons.map((l,i)=>`<button class="lesson-btn" id="nav-${l.id}" onclick="openLesson(${i})">${l.id} · ${l.title}</button>`).join("");
+}
+let current=0;
+let completed=JSON.parse(localStorage.getItem("gsModule1Completed")||"[]");
+
+function openLesson(i){
+ current=i; const l=lessons[i];
+ document.getElementById("content").innerHTML=pages[l.id];
+ document.querySelectorAll(".lesson-btn").forEach(x=>x.classList.remove("active"));
+ document.getElementById("nav-"+l.id).classList.add("active");
+ if(l.type==="quiz") renderQuiz();
+ updateProgress();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function check(btn,correct,id){
+ const box=document.getElementById(id);
+ document.querySelectorAll(".option").forEach(b=>{if(b.parentElement===btn.parentElement)b.classList.remove("selected")});
+ btn.classList.add("selected");
+ box.textContent=correct?"✓ Correct!":"✗ Not quite. Try again.";
+ box.className="feedback "+(correct?"correct":"incorrect");
+}
+function markCurrent(){
+ const id=lessons[current].id;
+ if(!completed.includes(id)) completed.push(id);
+ localStorage.setItem("gsModule1Completed",JSON.stringify(completed));
+ updateProgress();
+ alert("Lesson completed! Your progress has been saved on this browser.");
+}
+function updateProgress(){
+ lessons.forEach(l=>document.getElementById("nav-"+l.id)?.classList.toggle("done",completed.includes(l.id)));
+ const pct=Math.round(completed.length/lessons.length*100);
+ document.getElementById("progressBar").style.width=pct+"%";
+ document.getElementById("progressText").textContent=pct+"%";
+}
+function renderQuiz(){
+ const q=document.getElementById("quiz");
+ q.innerHTML=quiz.map((item,i)=>`<div class="question"><p><b>${i+1}. ${item[0]}</b></p>${item[2].map((o,j)=>`<button class="option" name="quiz${i}" data-q="${i}" data-a="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}<div id="qf${i}" class="feedback"></div></div>`).join("");
+ q.querySelectorAll(".option").forEach(btn=>btn.onclick=()=>{q.querySelectorAll('[name="'+btn.name+'"]').forEach(x=>x.classList.remove("selected"));btn.classList.add("selected")});
+}
+function gradeQuiz(){
+ let score=0,answered=0;
+ quiz.forEach((item,i)=>{
+ const selected=document.querySelector('[name="quiz'+i+'"].selected');
+ const f=document.getElementById("qf"+i);
+ if(selected){answered++;let ok=Number(selected.dataset.a)===item[3];if(ok)score++;f.textContent=ok?"✓ Correct":"✗ Review this concept";f.className="feedback "+(ok?"correct":"incorrect")}
+ });
+ const pct=Math.round(score/quiz.length*100);
+ document.getElementById("score").textContent=`Score: ${score}/${quiz.length} (${pct}%)`;
+ if(pct>=80){
+   if(!completed.includes("1.8"))completed.push("1.8");
+   if(!completed.includes("1.7")){} 
+   localStorage.setItem("gsModule1Completed",JSON.stringify(completed));
+   document.getElementById("completion").classList.add("show");
+   updateProgress();
+ } else {
+   document.getElementById("completion").classList.remove("show");
+ }
+}
+renderNav();openLesson(0);
+</script>
+</body>
+</html>
