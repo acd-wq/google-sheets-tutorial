@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Sheets Learning Hub — Module 3</title>
+<style>
+:root{
+  --navy:#17324d;--green:#1f7a5a;--light:#eef8f3;--bg:#f6f8fa;
+  --text:#243447;--muted:#667788;--border:#d9e1e8;--white:#fff;
+  --danger:#b63b3b;--gold:#c28b16;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+header{position:sticky;top:0;z-index:10;background:var(--navy);color:white;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-weight:700;font-size:19px}.module-tag{font-size:13px;opacity:.9}
+.layout{display:grid;grid-template-columns:280px 1fr;max-width:1400px;margin:auto;min-height:calc(100vh - 58px)}
+aside{background:white;border-right:1px solid var(--border);padding:20px;position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto}
+aside h3{margin:0 0 12px;color:var(--navy);font-size:17px}
+.progress-wrap{background:#e5e9ed;border-radius:20px;height:10px;overflow:hidden;margin:8px 0 18px}
+.progress{height:100%;width:0;background:var(--green);transition:.25s}
+.lesson-btn{width:100%;text-align:left;border:1px solid var(--border);background:white;border-radius:9px;padding:10px 11px;margin:5px 0;cursor:pointer;color:var(--text)}
+.lesson-btn:hover{background:var(--light)}.lesson-btn.active{border-color:var(--green);background:var(--light);font-weight:700}
+.lesson-btn.done::before{content:"✓ ";color:var(--green);font-weight:bold}
+main{padding:30px;max-width:1000px;width:100%}
+.hero{background:linear-gradient(135deg,#17324d,#24516f);color:white;border-radius:16px;padding:28px;margin-bottom:22px}
+.hero h1{margin:0 0 7px;font-size:31px}.hero p{margin:0;opacity:.92}
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:23px;margin-bottom:20px;box-shadow:0 2px 7px rgba(23,50,77,.04)}
+h2{color:var(--navy);margin-top:0}h3{color:var(--green)}
+.callout{background:var(--light);border-left:5px solid var(--green);padding:14px 16px;border-radius:8px;margin:15px 0}
+.tip{background:#fff8e7;border-left:5px solid var(--gold)}
+code{background:#eef1f4;padding:2px 6px;border-radius:5px}
+pre{background:#182635;color:#fff;padding:15px;border-radius:9px;overflow:auto}
+table{border-collapse:collapse;width:100%;margin:14px 0}
+th,td{border:1px solid var(--border);padding:9px;text-align:left}
+th{background:#edf3f7}
+.question{border:1px solid var(--border);border-radius:10px;padding:15px;margin:12px 0}
+.options label{display:block;margin:7px 0;cursor:pointer}
+button.primary{border:0;background:var(--green);color:#fff;padding:11px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+button.secondary{border:1px solid var(--green);background:white;color:var(--green);padding:10px 15px;border-radius:8px;font-weight:700;cursor:pointer}
+.feedback{margin-top:10px;font-weight:700}
+.correct{color:var(--green)}.wrong{color:var(--danger)}
+.input-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input.answer{padding:10px;border:1px solid var(--border);border-radius:7px;width:180px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.badge{display:inline-block;background:#e7f3ed;color:var(--green);padding:4px 9px;border-radius:15px;font-size:12px;font-weight:700}
+.small{font-size:13px;color:var(--muted)}
+.hidden{display:none}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:25px}
+@media(max-width:800px){
+ .layout{grid-template-columns:1fr} aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border)}
+ main{padding:18px}.hero h1{font-size:25px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">📊 Google Sheets Learning Hub</div>
+  <div class="module-tag">Module 3 · Formulas & Essential Functions</div>
+</header>
+
+<div class="layout">
+<aside>
+  <h3>Module 3 Lessons</h3>
+  <div class="small">Your progress</div>
+  <div class="progress-wrap"><div id="progress" class="progress"></div></div>
+  <div id="progressText" class="small"></div>
+  <div id="lessonList"></div>
+</aside>
+
+<main>
+<section class="hero">
+  <span class="badge">Beginner → Practical</span>
+  <h1>Module 3: Formulas & Essential Functions</h1>
+  <p>Learn how to make Google Sheets calculate for you—one formula at a time.</p>
+</section>
+
+<div id="lessonContent"></div>
+<footer>Google Sheets Learning Hub · Module 3</footer>
+</main>
+</div>
+
+<script>
+const lessons = [
+{
+ title:"3.1 What Is a Formula?",
+ html:`
+ <div class="card">
+ <h2>3.1 What Is a Formula?</h2>
+ <p>A <strong>formula</strong> tells Google Sheets to perform a calculation. Formulas normally begin with an <code>=</code> sign.</p>
+ <pre>=10+5</pre>
+ <p>Google Sheets calculates the result as <strong>15</strong>.</p>
+ <div class="callout"><strong>Remember:</strong> The <code>=</code> sign tells Sheets, “I want you to calculate something.”</div>
+ <h3>Using cell references</h3>
+ <table><tr><th>Cell</th><th>Value</th></tr><tr><td>A2</td><td>50</td></tr><tr><td>B2</td><td>20</td></tr></table>
+ <p>Instead of typing the numbers, you can write:</p>
+ <pre>=A2+B2</pre>
+ <p>This is useful because if A2 or B2 changes, the result updates automatically.</p>
+ <div class="question"><strong>Quick check:</strong> Which one is a valid formula?<div class="options">
+ <label><input type="radio" name="q31" value="0"> A2+B2</label>
+ <label><input type="radio" name="q31" value="1"> =A2+B2</label>
+ <label><input type="radio" name="q31" value="2"> A2=B2</label>
+ </div><button class="primary" onclick="checkRadio('q31',1,'f31')">Check</button><div id="f31" class="feedback"></div></div>
+ </div>`
+},
+{
+ title:"3.2 Operators: +, -, *, /, ^",
+ html:`
+ <div class="card">
+ <h2>3.2 Operators: +, −, ×, ÷ and ^</h2>
+ <p>Operators tell Sheets what mathematical operation to perform.</p>
+ <table><tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr>
+ <tr><td>+</td><td>Add</td><td><code>=10+5</code></td><td>15</td></tr>
+ <tr><td>-</td><td>Subtract</td><td><code>=10-5</code></td><td>5</td></tr>
+ <tr><td>*</td><td>Multiply</td><td><code>=10*5</code></td><td>50</td></tr>
+ <tr><td>/</td><td>Divide</td><td><code>=10/5</code></td><td>2</td></tr>
+ <tr><td>^</td><td>Power</td><td><code>=2^3</code></td><td>8</td></tr></table>
+ <div class="callout tip"><strong>Tip:</strong> Google Sheets uses <code>*</code> for multiplication and <code>/</code> for division.</div>
+ <h3>Practice</h3>
+ <p>What result should <code>=20*3-10</code> produce?</p>
+ <div class="input-row"><input id="a32" class="answer" placeholder="Type your answer"><button class="primary" onclick="checkInput('a32','50','f32')">Check</button></div>
+ <div id="f32" class="feedback"></div>
+ </div>`
+},
+{
+ title:"3.3 Relative Cell References",
+ html:`
+ <div class="card">
+ <h2>3.3 Relative Cell References</h2>
+ <p>A cell reference such as <code>B2</code> points to a location in the sheet. When you copy a formula, a <strong>relative reference</strong> normally changes according to its new position.</p>
+ <table><tr><th>Row</th><th>A</th><th>B</th><th>C</th></tr>
+ <tr><td>2</td><td>Laptop</td><td>2</td><td>50000</td></tr>
+ <tr><td>3</td><td>Phone</td><td>3</td><td>30000</td></tr></table>
+ <p>If D2 contains:</p><pre>=B2*C2</pre>
+ <p>and you copy it down to D3, Sheets changes it to:</p><pre>=B3*C3</pre>
+ <div class="callout"><strong>Why this matters:</strong> You can write one calculation and fill it down instead of creating every formula manually.</div>
+ <h3>Mini practice</h3>
+ <p>If E2 contains <code>=C2-D2</code>, what will the copied formula in E3 become?</p>
+ <div class="input-row"><input id="a33" class="answer" placeholder="Example: =C3-D3"><button class="primary" onclick="checkInput('a33','=C3-D3','f33',true)">Check</button></div>
+ <div id="f33" class="feedback"></div>
+ </div>`
+},
+{
+ title:"3.4 SUM",
+ html:`
+ <div class="card">
+ <h2>3.4 SUM</h2>
+ <p><code>SUM</code> adds numbers together. It is one of the most useful functions in Google Sheets.</p>
+ <pre>=SUM(B2:B6)</pre>
+ <p>The colon <code>:</code> means a range—from B2 through B6.</p>
+ <table><tr><th>Product</th><th>Sales</th></tr><tr><td>Laptop</td><td>50000</td></tr><tr><td>Phone</td><td>30000</td></tr><tr><td>Tablet</td><td>25000</td></tr><tr><td>Monitor</td><td>20000</td></tr></table>
+ <p>Formula for total sales:</p><pre>=SUM(B2:B5)</pre>
+ <h3>Practice</h3>
+ <p>What is the total of 50,000 + 30,000 + 25,000 + 20,000?</p>
+ <div class="input-row"><input id="a34" class="answer" placeholder="Type total"><button class="primary" onclick="checkInput('a34','125000','f34')">Check</button></div>
+ <div id="f34" class="feedback"></div>
+ </div>`
+},
+{
+ title:"3.5 AVERAGE, MIN & MAX",
+ html:`
+ <div class="card">
+ <h2>3.5 AVERAGE, MIN & MAX</h2>
+ <p>These functions help you quickly understand a group of numbers.</p>
+ <table><tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+ <tr><td>AVERAGE</td><td>Calculates the mean</td><td><code>=AVERAGE(B2:B6)</code></td></tr>
+ <tr><td>MIN</td><td>Finds the smallest value</td><td><code>=MIN(B2:B6)</code></td></tr>
+ <tr><td>MAX</td><td>Finds the largest value</td><td><code>=MAX(B2:B6)</code></td></tr></table>
+ <div class="callout">Think of them as three questions: <strong>What is typical?</strong> What is the <strong>smallest?</strong> What is the <strong>largest?</strong></div>
+ <h3>Practice</h3>
+ <p>For 10, 20, 30, 40, 50, what is the AVERAGE?</p>
+ <div class="input-row"><input id="a35" class="answer" placeholder="Type answer"><button class="primary" onclick="checkInput('a35','30','f35')">Check</button></div>
+ <div id="f35" class="feedback"></div>
+ </div>`
+},
+{
+ title:"3.6 COUNT, COUNTA & ROUND",
+ html:`
+ <div class="card">
+ <h2>3.6 COUNT, COUNTA & ROUND</h2>
+ <p>These functions are useful when working with real datasets.</p>
+ <table><tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+ <tr><td>COUNT</td><td>Counts cells containing numbers</td><td><code>=COUNT(B2:B20)</code></td></tr>
+ <tr><td>COUNTA</td><td>Counts non-empty cells</td><td><code>=COUNTA(A2:A20)</code></td></tr>
+ <tr><td>ROUND</td><td>Rounds a number to a chosen number of decimal places</td><td><code>=ROUND(B2,2)</code></td></tr></table>
+ <h3>COUNT vs COUNTA</h3>
+ <p>If a column contains numbers, text, and blanks, <code>COUNT</code> counts only the numbers. <code>COUNTA</code> counts both numbers and text, as long as the cells are not empty.</p>
+ <h3>Practice</h3>
+ <p>What does <code>=ROUND(12.5678,2)</code> return?</p>
+ <div class="input-row"><input id="a36" class="answer" placeholder="Type answer"><button class="primary" onclick="checkInput('a36','12.57','f36')">Check</button></div>
+ <div id="f36" class="feedback"></div>
+ </div>`
+},
+{
+ title:"3.7 Practice Project",
+ html:`
+ <div class="card">
+ <h2>3.7 Practice Project — Sales Calculator</h2>
+ <p>Now combine what you learned. Imagine this is part of a small sales report.</p>
+ <table><tr><th>Product</th><th>Units</th><th>Price</th></tr>
+ <tr><td>Laptop</td><td>2</td><td>50000</td></tr>
+ <tr><td>Phone</td><td>3</td><td>30000</td></tr>
+ <tr><td>Tablet</td><td>4</td><td>25000</td></tr>
+ <tr><td>Monitor</td><td>2</td><td>20000</td></tr></table>
+ <h3>Your tasks in Google Sheets</h3>
+ <ol>
+ <li>Create a <strong>Total Sales</strong> column.</li>
+ <li>In the first row, calculate <code>Units × Price</code> using cell references.</li>
+ <li>Fill the formula down for all products.</li>
+ <li>Use <code>SUM</code> to calculate total sales.</li>
+ <li>Use <code>AVERAGE</code> to calculate average sales per product.</li>
+ <li>Use <code>MAX</code> to find the highest product sales.</li>
+ </ol>
+ <div class="callout"><strong>Expected results:</strong> Total sales = ₱290,000 · Average = ₱72,500 · Highest = ₱100,000</div>
+ <p>Try building this yourself before looking at the answers.</p>
+ <button class="secondary" onclick="document.getElementById('answers37').classList.toggle('hidden')">Show / Hide Answers</button>
+ <div id="answers37" class="hidden">
+ <pre>
+Laptop: 2 × 50,000 = 100,000
+Phone: 3 × 30,000 = 90,000
+Tablet: 4 × 25,000 = 100,000
+Monitor: 2 × 20,000 = 40,000
+
+Total: =SUM(D2:D5)
+Average: =AVERAGE(D2:D5)
+Highest: =MAX(D2:D5)
+ </pre></div>
+ <div class="callout tip"><strong>Portfolio habit:</strong> Keep a copy of this practice sheet. Later, you can use similar work in a larger business case study.</div>
+ </div>`
+},
+{
+ title:"3.8 Module Quiz",
+ html:`
+ <div class="card">
+ <h2>3.8 Module Quiz</h2>
+ <p>Answer all 10 questions. You need <strong>80%</strong> to pass this module.</p>
+ <div id="quiz"></div>
+ <button class="primary" onclick="gradeQuiz()">Submit Quiz</button>
+ <div id="quizResult" class="feedback"></div>
+ </div>`
+}
+];
+
+const quiz = [
+ ["Which symbol normally starts a formula?","=",["=","+","#"],0],
+ ["Which operator multiplies values?","*",["+","*","x/"],1],
+ ["What does =SUM(B2:B6) do?","Adds the values in B2 through B6",["Adds the values in B2 through B6","Counts text","Finds the largest value"],0],
+ ["What does =AVERAGE(A2:A6) calculate?","The mean of the values",["The smallest value","The mean of the values","The number of rows"],1],
+ ["Which function finds the smallest number?","MIN",["MIN","MAX","COUNT"],0],
+ ["Which function finds the largest number?","MAX",["AVERAGE","MAX","COUNTA"],1],
+ ["Which function counts numeric cells?","COUNT",["COUNT","COUNTA","ROUND"],0],
+ ["Which function counts non-empty cells?","COUNTA",["COUNT","COUNTA","MIN"],1],
+ ["What does =ROUND(8.765,2) return?","8.77",["8.76","8.77","8.70"],1],
+ ["If D2 has =B2*C2 and you copy it to D3, what normally happens?","It becomes =B3*C3",["It stays =B2*C2","It becomes =B3*C3","It becomes =C2*D2"],1]
+];
+
+let current=0;
+const completed = JSON.parse(localStorage.getItem("gsModule3Completed") || "[]");
+
+function renderSidebar(){
+ const list=document.getElementById("lessonList");
+ list.innerHTML="";
+ lessons.forEach((l,i)=>{
+   const b=document.createElement("button");
+   b.className="lesson-btn "+(i===current?"active ":"")+(completed.includes(i)?"done":"");
+   b.textContent=`${i+1}. ${l.title}`;
+   b.onclick=()=>showLesson(i);
+   list.appendChild(b);
+ });
+ const pct=Math.round(completed.length/lessons.length*100);
+ document.getElementById("progress").style.width=pct+"%";
+ document.getElementById("progressText").textContent=`${completed.length} of ${lessons.length} lessons completed (${pct}%)`;
+}
+
+function showLesson(i){
+ current=i;
+ document.getElementById("lessonContent").innerHTML=lessons[i].html;
+ renderSidebar();
+ if(i===7) renderQuiz();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function markDone(){
+ if(!completed.includes(current)){
+   completed.push(current);
+   completed.sort((a,b)=>a-b);
+   localStorage.setItem("gsModule3Completed",JSON.stringify(completed));
+ }
+ renderSidebar();
+ if(completed.length===lessons.length){
+   alert("🎉 Congratulations! You completed Module 3. You are ready for Module 4.");
+ }
+}
+function checkRadio(name,correct,id){
+ const chosen=document.querySelector(`input[name="${name}"]:checked`);
+ const f=document.getElementById(id);
+ if(!chosen){f.textContent="Please choose an answer.";f.className="feedback wrong";return}
+ if(Number(chosen.value)===correct){f.textContent="✓ Correct!";f.className="feedback correct";markDone();}
+ else{f.textContent="Not quite. Try again.";f.className="feedback wrong";}
+}
+function checkInput(id,expected,feedbackId,caseInsensitive=false){
+ const value=document.getElementById(id).value.trim();
+ const f=document.getElementById(feedbackId);
+ const a=caseInsensitive?value.toLowerCase():value;
+ const e=caseInsensitive?expected.toLowerCase():expected;
+ if(a===e){f.textContent="✓ Correct!";f.className="feedback correct";markDone();}
+ else{f.textContent="Not quite. Check your calculation or formula.";f.className="feedback wrong";}
+}
+function renderQuiz(){
+ const q=document.getElementById("quiz"); if(!q)return;
+ q.innerHTML=quiz.map((item,i)=>`
+  <div class="question">
+   <strong>${i+1}. ${item[0]}</strong>
+   <div class="options">
+   ${item[2].map((op,j)=>`<label><input type="radio" name="quiz${i}" value="${j}"> ${op}</label>`).join("")}
+   </div>
+  </div>`).join("");
+}
+function gradeQuiz(){
+ let score=0;
+ quiz.forEach((item,i)=>{
+  const chosen=document.querySelector(`input[name="quiz${i}"]:checked`);
+  if(chosen && Number(chosen.value)===item[3]) score++;
+ });
+ const pct=Math.round(score/quiz.length*100);
+ const r=document.getElementById("quizResult");
+ if(pct>=80){
+   r.innerHTML=`🎉 <strong>Passed!</strong> You scored ${score}/${quiz.length} (${pct}%).`;
+   r.className="feedback correct";
+   markDone();
+ }else{
+   r.innerHTML=`You scored ${score}/${quiz.length} (${pct}%). Review the lessons and try again. You need 80% to pass.`;
+   r.className="feedback wrong";
+ }
+}
+renderSidebar(); showLesson(0);
+</script>
+</body>
+</html>
