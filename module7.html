@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 7: Date & Time Functions | Google Sheets Learning Hub</title>
+<style>
+:root{--navy:#17324d;--green:#1f7a5a;--light:#eef8f3;--bg:#f6f8fa;--text:#243447;--muted:#667788;--border:#d9e1e8;--white:#fff;--danger:#b94a48}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px #0002}
+.brand{font-weight:700;font-size:18px}.module-label{font-size:13px;opacity:.85}
+.layout{display:flex;max-width:1400px;margin:auto}.sidebar{width:290px;background:#fff;border-right:1px solid var(--border);min-height:calc(100vh - 68px);padding:22px 16px;position:sticky;top:68px;height:calc(100vh - 68px);overflow:auto}
+.progress-wrap{margin-bottom:18px}.progress-title{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px}.progress{height:9px;background:#e7edf1;border-radius:20px;overflow:hidden}.bar{height:100%;width:0;background:var(--green);transition:.3s}
+.lesson-btn{width:100%;border:1px solid transparent;background:#fff;text-align:left;padding:11px 12px;border-radius:9px;margin:3px 0;color:var(--text);cursor:pointer}.lesson-btn:hover{background:var(--light)}.lesson-btn.active{background:var(--light);border-color:#b9ddcd;font-weight:700}.lesson-btn .check{float:right;color:var(--green);font-weight:700}
+main{flex:1;padding:32px;max-width:1000px}.hero,.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:20px;box-shadow:0 2px 7px #00000008}
+h1,h2,h3{color:var(--navy);line-height:1.25}.hero h1{margin-top:0}.muted{color:var(--muted)}.callout{background:var(--light);border-left:5px solid var(--green);padding:14px 16px;border-radius:8px;margin:16px 0}
+pre{background:#17212b;color:#fff;padding:15px;border-radius:9px;overflow:auto}.formula{font-family:Consolas,monospace;background:#f0f3f5;padding:2px 6px;border-radius:4px}
+table{width:100%;border-collapse:collapse;margin:15px 0}th,td{border:1px solid var(--border);padding:9px;text-align:left}th{background:#f1f5f7}
+.practice{background:#fbfdfc;border:1px dashed #9bcbb8;padding:18px;border-radius:10px}.question{margin:16px 0;padding:15px;border:1px solid var(--border);border-radius:10px}.choices label{display:block;margin:7px 0;cursor:pointer}
+input[type=text]{padding:9px;border:1px solid #bcc8d1;border-radius:7px;width:min(360px,100%)}button.action{background:var(--green);color:#fff;border:0;border-radius:8px;padding:9px 15px;cursor:pointer;margin-top:8px}.feedback{margin-top:9px;font-weight:700}.good{color:var(--green)}.bad{color:var(--danger)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}.nav button{border:1px solid var(--border);background:#fff;padding:10px 15px;border-radius:8px;cursor:pointer}.nav button:last-child{background:var(--navy);color:#fff}
+.hidden{display:none}.badge{display:inline-block;background:#eaf4ef;color:var(--green);padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:25px}
+@media(max-width:800px){.layout{display:block}.sidebar{width:100%;position:static;height:auto;min-height:0;border-right:0;border-bottom:1px solid var(--border)}main{padding:18px}.lesson-btn{display:inline-block;width:auto;margin-right:4px}.lesson-list{white-space:normal}.hero,.card{padding:20px}header{padding:13px 16px}}
+</style>
+</head>
+<body>
+<header><div class="brand">📊 Google Sheets Learning Hub</div><div class="module-label">Module 7 · Date & Time Functions</div></header>
+<div class="layout">
+<aside class="sidebar">
+<div class="progress-wrap"><div class="progress-title"><span>Module Progress</span><strong id="pct">0%</strong></div><div class="progress"><div class="bar" id="bar"></div></div></div>
+<div class="lesson-list" id="lessonList"></div>
+</aside>
+<main id="app"></main>
+</div>
+<footer>Module 7 • Learn → Practice → Apply → Review</footer>
+<script>
+const lessons=[
+{title:"7.1 Understanding Dates & Times",body:`
+<h2>7.1 Understanding Dates & Times</h2>
+<p>Google Sheets stores dates as values, which allows you to sort, filter, calculate, and analyze them. A date such as <b>10/04/2026</b> can be used in calculations instead of being treated only as text.</p>
+<div class="callout"><b>Think like a data analyst:</b> dates help you answer questions such as “How many days did an order take?” or “Which month had the most sales?”</div>
+<h3>Common date/time values</h3><table><tr><th>Value</th><th>Example</th><th>Use</th></tr><tr><td>Date</td><td>10/04/2026</td><td>Order date, hire date</td></tr><tr><td>Time</td><td>09:30 AM</td><td>Start time, delivery time</td></tr><tr><td>Date + time</td><td>10/04/2026 09:30</td><td>Timestamp</td></tr></table>
+<div class="practice"><b>Quick check:</b><p>Why is it useful for a spreadsheet to recognize a date as a value?</p><button class="action" onclick="feedback(this,'Correct! Recognized dates can be sorted and used in calculations.')">It can be sorted and calculated</button><button class="action" onclick="feedback(this,'Try again. Think about what calculations you can perform with dates.')">It is always text</button><div class="feedback"></div></div>`},
+{title:"7.2 TODAY & NOW",body:`
+<h2>7.2 TODAY & NOW</h2>
+<p>These functions return the current date or current date and time.</p>
+<pre>=TODAY()
+=NOW()</pre>
+<table><tr><th>Function</th><th>Returns</th></tr><tr><td>TODAY()</td><td>Current date</td></tr><tr><td>NOW()</td><td>Current date and current time</td></tr></table>
+<div class="callout"><b>Important:</b> These are dynamic functions. Their results can change as the spreadsheet recalculates or as time passes.</div>
+<div class="practice"><b>Practice:</b> Which function would you use for a daily report that only needs today's date?<br><input id="p72" placeholder="Type the function"><button class="action" onclick="checkText('p72','TODAY','p72f')">Check</button><div id="p72f" class="feedback"></div></div>`},
+{title:"7.3 YEAR, MONTH & DAY",body:`
+<h2>7.3 YEAR, MONTH & DAY</h2>
+<p>These functions extract individual parts of a date.</p>
+<pre>=YEAR(A2)
+=MONTH(A2)
+=DAY(A2)</pre>
+<table><tr><th>Date in A2</th><th>Formula</th><th>Result</th></tr><tr><td>10/04/2026</td><td>=YEAR(A2)</td><td>2026</td></tr><tr><td>10/04/2026</td><td>=MONTH(A2)</td><td>10</td></tr><tr><td>10/04/2026</td><td>=DAY(A2)</td><td>4</td></tr></table>
+<div class="callout"><b>Analyst use:</b> extracting the year or month makes it easier to group and compare business activity.</div>
+<div class="practice"><b>Practice:</b> If A2 contains 06/15/2026, what does <span class="formula">=MONTH(A2)</span> return?<br><input id="p73" placeholder="Your answer"><button class="action" onclick="checkText('p73','6','p73f')">Check</button><div id="p73f" class="feedback"></div></div>`},
+{title:"7.4 DATE Function",body:`
+<h2>7.4 DATE Function</h2>
+<p>The <span class="formula">DATE</span> function creates a valid date from year, month, and day.</p>
+<pre>=DATE(2026,10,4)</pre>
+<p>This returns a date representing October 4, 2026 (depending on the cell's date format).</p>
+<table><tr><th>Part</th><th>Meaning</th></tr><tr><td>2026</td><td>Year</td></tr><tr><td>10</td><td>Month</td></tr><tr><td>4</td><td>Day</td></tr></table>
+<div class="practice"><b>Practice:</b> Complete the formula to create December 25, 2026.<br><input id="p74" placeholder="DATE(...)"><button class="action" onclick="checkText('p74','DATE(2026,12,25)','p74f')">Check</button><div id="p74f" class="feedback"></div></div>`},
+{title:"7.5 DATEDIF",body:`
+<h2>7.5 DATEDIF</h2>
+<p><span class="formula">DATEDIF</span> calculates the difference between two dates.</p>
+<pre>=DATEDIF(A2,B2,"D")</pre>
+<p>The <b>"D"</b> unit returns the difference in days. Other useful units include <b>"M"</b> for complete months and <b>"Y"</b> for complete years.</p>
+<table><tr><th>Unit</th><th>Meaning</th></tr><tr><td>"D"</td><td>Days</td></tr><tr><td>"M"</td><td>Complete months</td></tr><tr><td>"Y"</td><td>Complete years</td></tr></table>
+<div class="callout"><b>Example:</b> If A2 is 01/01/2026 and B2 is 01/11/2026, <span class="formula">=DATEDIF(A2,B2,"D")</span> returns <b>10</b>.</div>
+<div class="practice"><b>Practice:</b> Which unit returns the number of complete years?<br><input id="p75" placeholder="D, M, or Y"><button class="action" onclick="checkText('p75','Y','p75f')">Check</button><div id="p75f" class="feedback"></div></div>`},
+{title:"7.6 EDATE & EOMONTH",body:`
+<h2>7.6 EDATE & EOMONTH</h2>
+<p>These functions are useful for schedules, reporting periods, subscriptions, and due dates.</p>
+<pre>=EDATE(A2,1)
+=EOMONTH(A2,0)</pre>
+<table><tr><th>Function</th><th>What it does</th></tr><tr><td>EDATE</td><td>Moves a date forward/backward by a number of months</td></tr><tr><td>EOMONTH</td><td>Returns the last day of a month, shifted by a number of months</td></tr></table>
+<div class="callout"><b>Example:</b> If A2 is 10/04/2026, <span class="formula">=EDATE(A2,1)</span> moves one month forward. <span class="formula">=EOMONTH(A2,0)</span> returns the last day of October 2026.</div>
+<div class="practice"><b>Practice:</b> Which function returns the last day of a month?<br><input id="p76" placeholder="Function name"><button class="action" onclick="checkText('p76','EOMONTH','p76f')">Check</button><div id="p76f" class="feedback"></div></div>`},
+{title:"7.7 Practice Project — Sales Date Analysis",body:`
+<h2>7.7 Practice Project — Sales Date Analysis</h2>
+<p>Use the table below to practice extracting date information and calculating order processing time.</p>
+<table><tr><th>Order ID</th><th>Order Date</th><th>Delivery Date</th><th>Sales</th></tr>
+<tr><td>1001</td><td>01/05/2026</td><td>01/08/2026</td><td>₱50,000</td></tr>
+<tr><td>1002</td><td>02/10/2026</td><td>02/15/2026</td><td>₱30,000</td></tr>
+<tr><td>1003</td><td>03/03/2026</td><td>03/06/2026</td><td>₱25,000</td></tr>
+<tr><td>1004</td><td>04/20/2026</td><td>04/29/2026</td><td>₱20,000</td></tr>
+<tr><td>1005</td><td>05/12/2026</td><td>05/14/2026</td><td>₱8,000</td></tr></table>
+<h3>Your tasks in Google Sheets</h3>
+<ol><li>Create a <b>Delivery Days</b> column.</li><li>Use <span class="formula">DATEDIF</span> to calculate the number of days between Order Date and Delivery Date.</li><li>Create an <b>Order Year</b> column using <span class="formula">YEAR</span>.</li><li>Create an <b>Order Month</b> column using <span class="formula">MONTH</span>.</li><li>Identify the order that took the longest to deliver.</li></ol>
+<div class="callout"><b>Expected delivery days:</b> 3, 5, 3, 9, and 2. The longest delivery time is <b>9 days (Order 1004)</b>.</div>
+<div class="practice"><b>Checkpoint:</b> What formula would you put in E2 if B2 is Order Date and C2 is Delivery Date?<br><input id="p77" placeholder="Enter formula"><button class="action" onclick="checkText('p77','=DATEDIF(B2,C2,"D")','p77f')">Check</button><div id="p77f" class="feedback"></div></div>`},
+{title:"7.8 Module Quiz",body:`
+<h2>7.8 Module Quiz</h2><p>Choose the best answer. You need <b>80%</b> or higher to pass.</p>
+<div id="quiz"></div><button class="action" onclick="gradeQuiz()">Submit Quiz</button><div id="quizResult" class="feedback"></div>
+<div id="completeBox" class="callout hidden"><b>🎉 Module 7 completed!</b><br>You are ready to continue to Module 8.</div>`}
+];
+
+const quiz=[
+["Which function returns the current date?","TODAY()","NOW()","DATE()","YEAR()","A"],
+["Which function returns the current date and time?","TODAY()","NOW()","DAY()","DATEDIF()","B"],
+["What does =YEAR(A2) return?","The day","The month","The year","The time","C"],
+["Which function creates a date from year, month, and day?","DATE","DATEDIF","EDATE","DAY","A"],
+["Which DATEDIF unit returns days?","Y","M","D","T","C"],
+["Which function moves a date by a number of months?","EDATE","EOMONTH","MONTH","DATE","A"],
+["Which function returns the last day of a month?","EDATE","EOMONTH","DAY","NOW","B"],
+["If Order Date is B2 and Delivery Date is C2, which calculates days between them?","=DATEDIF(B2,C2,\"D\")","=DATEDIF(C2,B2,\"D\")","=DAY(B2,C2)","=DATE(B2,C2)","A"],
+["Why extract YEAR or MONTH from a date?","To delete dates","To group and analyze data","To turn numbers into text","To remove formulas","B"],
+["What is the longest delivery time in the practice project?","2 days","3 days","5 days","9 days","D"]
+];
+
+let current=0;
+const key="gsModule7Completed";
+const done=JSON.parse(localStorage.getItem(key)||"[]");
+
+function renderList(){document.getElementById("lessonList").innerHTML=lessons.map((l,i)=>`<button class="lesson-btn ${i===current?'active':''}" onclick="go(${i})">${i+1}. ${l.title}<span class="check">${done.includes(i)?"✓":""}</span></button>`).join("");updateProgress();}
+function updateProgress(){let n=done.length;document.getElementById("pct").textContent=Math.round(n/lessons.length*100)+"%";document.getElementById("bar").style.width=(n/lessons.length*100)+"%";}
+function go(i){current=i;document.getElementById("app").innerHTML=`<section class="hero"><span class="badge">Lesson ${i+1} of ${lessons.length}</span>${lessons[i].body}<div class="nav"><button onclick="prev()">← Previous</button><button onclick="markNext()">${i===lessons.length-1?"Finish":"Mark Complete & Next"} →</button></div></section>`;renderList();if(i===7)buildQuiz();}
+function prev(){if(current>0)go(current-1)}
+function markNext(){if(!done.includes(current)){done.push(current);localStorage.setItem(key,JSON.stringify(done))}if(current<lessons.length-1)go(current+1);else{go(current)}}
+function feedback(btn,msg){const box=btn.parentElement.querySelector(".feedback");box.textContent=msg;box.className="feedback "+(msg.startsWith("Correct")?"good":"bad");}
+function checkText(id,answer,out){let v=document.getElementById(id).value.trim().replace(/\s+/g,"");let a=answer.replace(/\s+/g,"");let el=document.getElementById(out);if(v.toUpperCase()===a.toUpperCase()){el.textContent="✓ Correct!";el.className="feedback good"}else{el.textContent="✗ Not quite. Try again.";el.className="feedback bad"}}
+function buildQuiz(){document.getElementById("quiz").innerHTML=quiz.map((q,i)=>`<div class="question"><b>${i+1}. ${q[0]}</b><div class="choices">${q.slice(1,5).map((x,j)=>`<label><input type="radio" name="q${i}" value="${String.fromCharCode(65+j)}"> ${String.fromCharCode(65+j)}. ${x}</label>`).join("")}</div></div>`).join("")}
+function gradeQuiz(){let score=0;quiz.forEach((q,i)=>{let x=document.querySelector(`input[name="q${i}"]:checked`);if(x&&x.value===q[5])score++});let pct=Math.round(score/quiz.length*100);let r=document.getElementById("quizResult");if(pct>=80){r.textContent=`🎉 Passed! Score: ${score}/${quiz.length} (${pct}%).`;r.className="feedback good";if(!done.includes(7)){done.push(7);localStorage.setItem(key,JSON.stringify(done));renderList();updateProgress()}document.getElementById("completeBox").classList.remove("hidden")}else{r.textContent=`Score: ${score}/${quiz.length} (${pct}%). You need 80% to pass. Review the lessons and try again.`;r.className="feedback bad"}}
+go(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 8: Charts, Pivot Tables & Dashboard</title>
+<style>
+:root{--n:#17324d;--g:#1f7a5a;--l:#eef8f3;--bg:#f6f8fa;--t:#243447;--m:#667788;--b:#d9e1e8}
+*{box-sizing:border-box}body{margin:0;font:16px Arial,sans-serif;background:var(--bg);color:var(--t);line-height:1.6}
+header{position:sticky;top:0;z-index:5;background:var(--n);color:white;padding:16px 24px;display:flex;justify-content:space-between}
+.layout{display:flex;max-width:1400px;margin:auto}.side{width:290px;background:white;border-right:1px solid var(--b);padding:20px;position:sticky;top:60px;height:calc(100vh - 60px);overflow:auto}
+main{max-width:1000px;padding:30px;flex:1}.card{background:white;border:1px solid var(--b);border-radius:14px;padding:26px;box-shadow:0 2px 7px #00000008}
+h1,h2,h3{color:var(--n)}.muted{color:var(--m)}.call{background:var(--l);border-left:5px solid var(--g);padding:14px;margin:16px 0;border-radius:8px}
+pre{background:#17212b;color:white;padding:14px;border-radius:8px;overflow:auto}.formula{font-family:monospace;background:#f0f3f5;padding:2px 5px}
+table{width:100%;border-collapse:collapse;margin:15px 0}th,td{border:1px solid var(--b);padding:9px;text-align:left}th{background:#f1f5f7}
+.lesson{display:block;width:100%;text-align:left;border:1px solid transparent;background:white;padding:10px;border-radius:8px;margin:3px 0;cursor:pointer}.lesson.active{background:var(--l);border-color:#b9ddcd;font-weight:bold}.check{float:right;color:var(--g)}
+.prog{height:9px;background:#e7edf1;border-radius:20px;overflow:hidden}.bar{height:100%;background:var(--g);width:0}
+.practice{border:1px dashed #9bcbb8;padding:16px;border-radius:10px;background:#fbfdfc}input{padding:9px;border:1px solid #bcc8d1;border-radius:7px;max-width:430px;width:100%}
+button.action,.next{background:var(--g);color:white;border:0;border-radius:8px;padding:9px 15px;cursor:pointer;margin-top:8px}.nav{display:flex;justify-content:space-between;margin-top:22px}.nav button:first-child{background:white;color:var(--t);border:1px solid var(--b)}
+.feedback{font-weight:bold;margin-top:8px}.good{color:var(--g)}.bad{color:#b94a48}.q{padding:14px;border:1px solid var(--b);border-radius:9px;margin:14px 0}.q label{display:block;margin:7px 0}
+.badge{display:inline-block;background:#eaf4ef;color:var(--g);padding:4px 9px;border-radius:20px;font-size:12px;font-weight:bold}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{text-align:center;border:1px solid var(--b);border-radius:9px;padding:12px}.metric b{display:block;font-size:23px;color:var(--n)}
+@media(max-width:800px){.layout{display:block}.side{width:100%;position:static;height:auto;border-right:0;border-bottom:1px solid var(--b)}main{padding:18px}.metrics{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><b>📊 Google Sheets Learning Hub</b><span>Module 8 · Charts, Pivot Tables & Dashboard</span></header>
+<div class="layout"><aside class="side">
+<div class="muted">Module Progress <b id="pct">0%</b></div><div class="prog"><div id="bar" class="bar"></div></div>
+<div id="list"></div></aside><main id="app"></main></div>
+<script>
+const L=[
+["8.1 Why Visualize Data?",`<h2>8.1 Why Visualize Data?</h2>
+<p>Charts turn rows of numbers into a visual story. Start with the business question, then choose a chart that helps answer it.</p>
+<table><tr><th>Question</th><th>Good starting chart</th></tr><tr><td>Sales trend over time?</td><td>Line chart</td></tr><tr><td>Which products sell most?</td><td>Column/bar chart</td></tr><tr><td>Parts of a whole?</td><td>Pie/donut chart</td></tr><tr><td>Relationship between two numbers?</td><td>Scatter chart</td></tr></table>
+<div class="practice"><b>Quick check:</b> Best chart for month-by-month sales?<br><button class="action" onclick="fb(this,1)">Line chart</button> <button class="action" onclick="fb(this,0)">Pie chart</button><div class="feedback"></div></div>`],
+["8.2 Creating & Formatting Charts",`<h2>8.2 Creating & Formatting Charts</h2>
+<ol><li>Select the data range.</li><li>Choose <b>Insert → Chart</b>.</li><li>Check the chart type.</li><li>Format title, labels, legend, and other settings.</li></ol>
+<table><tr><th>Month</th><th>Sales</th></tr><tr><td>Jan</td><td>₱50,000</td></tr><tr><td>Feb</td><td>₱65,000</td></tr><tr><td>Mar</td><td>₱58,000</td></tr><tr><td>Apr</td><td>₱75,000</td></tr></table>
+<div class="call">Use a clear title such as <b>Monthly Sales — 2026</b>, rather than “Chart 1”.</div>
+<div class="practice"><b>Practice:</b> Menu path to start a chart?<br><input id="p82"><button class="action" onclick="check('p82','Insert → Chart','f82')">Check</button><div id="f82" class="feedback"></div></div>`],
+["8.3 Pivot Tables",`<h2>8.3 Pivot Tables</h2><p>A pivot table summarizes a larger dataset without requiring many manual formulas.</p>
+<table><tr><th>Area</th><th>Purpose</th></tr><tr><td>Rows</td><td>Groups records</td></tr><tr><td>Columns</td><td>Creates another grouping</td></tr><tr><td>Values</td><td>Calculates SUM, COUNT, etc.</td></tr><tr><td>Filters</td><td>Limits included data</td></tr></table>
+<p>Create one with <b>Insert → Pivot table</b>.</p>
+<div class="call">Example: Region in Rows + Sales in Values summarized by SUM = sales by region.</div>
+<div class="practice"><b>Quick check:</b> Where does total Sales normally go?<br><button class="action" onclick="fb(this,1)">Values</button> <button class="action" onclick="fb(this,0)">Rows</button><div class="feedback"></div></div>`],
+["8.4 Pivot Table Summaries",`<h2>8.4 Pivot Table Summaries</h2>
+<table><tr><th>Question</th><th>Pivot setup</th></tr><tr><td>Total sales by region?</td><td>Rows: Region; Values: SUM Sales</td></tr><tr><td>Number of orders by product?</td><td>Rows: Product; Values: COUNTA Order ID</td></tr><tr><td>Sales by region and month?</td><td>Rows: Region; Columns: Month; Values: SUM Sales</td></tr></table>
+<div class="call">A pivot table summarizes source data. If source data changes, refresh/update the pivot table when needed.</div>
+<div class="practice"><b>Practice:</b> To compare total sales for Manila, Cebu and Davao, what field goes in Rows?<br><input id="p84"><button class="action" onclick="check('p84','Region','f84')">Check</button><div id="f84" class="feedback"></div></div>`],
+["8.5 Filters & Slicers",`<h2>8.5 Filters & Slicers</h2>
+<p>Filters focus your view on relevant records. Slicers provide a visual way to filter connected tables, pivot tables, or charts.</p>
+<ul><li>Show only Davao sales.</li><li>Show only January orders.</li><li>Show only one product category.</li></ul>
+<div class="call"><b>Remember:</b> filtering is not deleting. The other records remain available.</div>
+<div class="practice"><b>Quick check:</b> To view only Davao sales, what should you use?<br><button class="action" onclick="fb(this,1)">A filter</button> <button class="action" onclick="fb(this,0)">Delete other rows</button><div class="feedback"></div></div>`],
+["8.6 Basic Dashboard Layout",`<h2>8.6 Basic Dashboard Layout</h2>
+<p>A dashboard puts important business information in one place.</p>
+<div class="metrics"><div class="metric"><b>₱135K</b>Total Sales</div><div class="metric"><b>25</b>Orders</div><div class="metric"><b>18%</b>Profit Margin</div></div>
+<ol><li><b>Top:</b> title and key metrics.</li><li><b>Middle:</b> important charts or pivot summaries.</li><li><b>Bottom:</b> supporting details and filters.</li></ol>
+<div class="call">Keep it simple. Two or three useful visuals can be better than a crowded dashboard.</div>
+<div class="practice"><b>Practice:</b> What should be most prominent?<br><button class="action" onclick="fb(this,1)">Key metrics and important insights</button> <button class="action" onclick="fb(this,0)">Decorative graphics</button><div class="feedback"></div></div>`],
+["8.7 Final Project — Sales Performance Dashboard",`<h2>8.7 Final Project — Sales Performance Dashboard</h2>
+<p>Use this dataset in Google Sheets.</p>
+<table><tr><th>Order</th><th>Date</th><th>Product</th><th>Region</th><th>Sales</th></tr>
+<tr><td>1001</td><td>01/05/2026</td><td>Laptop</td><td>Manila</td><td>50000</td></tr><tr><td>1002</td><td>01/12/2026</td><td>Phone</td><td>Davao</td><td>30000</td></tr>
+<tr><td>1003</td><td>02/08/2026</td><td>Tablet</td><td>Cebu</td><td>25000</td></tr><tr><td>1004</td><td>02/20/2026</td><td>Laptop</td><td>Manila</td><td>50000</td></tr>
+<tr><td>1005</td><td>03/03/2026</td><td>Monitor</td><td>Davao</td><td>20000</td></tr><tr><td>1006</td><td>03/18/2026</td><td>Phone</td><td>Cebu</td><td>30000</td></tr>
+<tr><td>1007</td><td>04/05/2026</td><td>Tablet</td><td>Manila</td><td>25000</td></tr><tr><td>1008</td><td>04/22/2026</td><td>Monitor</td><td>Davao</td><td>20000</td></tr>
+<tr><td>1009</td><td>05/09/2026</td><td>Laptop</td><td>Cebu</td><td>50000</td></tr><tr><td>1010</td><td>05/25/2026</td><td>Phone</td><td>Manila</td><td>30000</td></tr></table>
+<h3>Your tasks</h3><ol><li>Calculate Total Sales.</li><li>Create a pivot table for Sales by Region.</li><li>Create a pivot table for Sales by Product.</li><li>Create a chart for Sales by Region.</li><li>Create a chart for Sales by Product.</li><li>Add a clear dashboard title.</li><li>Show at least two key metrics.</li><li>Optionally add a filter or slicer.</li></ol>
+<div class="call"><b>Expected results:</b> Total Sales ₱330,000. Region: Manila ₱155,000; Davao ₱70,000; Cebu ₱105,000. Product: Laptop ₱150,000; Phone ₱90,000; Tablet ₱50,000; Monitor ₱40,000.</div>
+<div class="practice"><b>Checkpoint:</b> Total sales for Manila?<br><input id="p87"><button class="action" onclick="check('p87','155000','f87')">Check</button><div id="f87" class="feedback"></div></div>`],
+["8.8 Module Quiz",`<h2>8.8 Module Quiz</h2><p>Choose the best answer. You need <b>80%</b> or higher to pass.</p><div id="quiz"></div><button class="action" onclick="grade()">Submit Quiz</button><div id="qr" class="feedback"></div><div id="complete" class="call" style="display:none"><b>🎉 Module 8 completed!</b><br>You have completed the Google Sheets Learning Hub core Modules 1–8. Great work!</div>`]
+];
+const Q=[
+["Best chart for a trend over time?","Pie","Line","Donut","Scatter","B"],
+["Menu path to create a chart?","Format → Chart","Insert → Chart","Tools → Chart","Data → Chart only","B"],
+["Main purpose of a pivot table?","Delete data","Summarize/analyze data","Change theme","Write code","B"],
+["Where does total Sales normally go?","Rows","Columns","Values","Title","C"],
+["Which pivot area limits included records?","Filters","Values","Rows","Legend","A"],
+["What is a slicer useful for?","Deleting rows","Visually filtering data","Auto-writing formulas","Changing addresses","B"],
+["What should a dashboard prioritize?","Business insights","Decorative images","Many charts","Hidden formulas","A"],
+["Total sales in the final project?","₱155,000","₱250,000","₱330,000","₱400,000","C"],
+["Highest-sales region?","Davao","Cebu","Manila","Equal","C"],
+["Highest-sales product?","Phone","Laptop","Tablet","Monitor","B"]];
+let cur=0, key="gsModule8Completed", done=JSON.parse(localStorage.getItem(key)||"[]");
+function render(){list.innerHTML=L.map((x,i)=>`<button class="lesson ${i==cur?'active':''}" onclick="go(${i})">${i+1}. ${x[0]} <span class="check">${done.includes(i)?"✓":""}</span></button>`).join("");let p=Math.round(done.length/8*100);pct.textContent=p+"%";bar.style.width=p+"%"}
+function go(i){cur=i;app.innerHTML=`<section class="card"><span class="badge">Lesson ${i+1} of 8</span>${L[i][1]}<div class="nav"><button class="next" onclick="prev()">← Previous</button><button class="next" onclick="next()">Mark Complete & Next →</button></div></section>`;render();if(i==7)build()}
+function prev(){if(cur>0)go(cur-1)}
+function next(){if(!done.includes(cur)){done.push(cur);localStorage.setItem(key,JSON.stringify(done))}if(cur<7)go(cur+1);else go(cur)}
+function fb(b,ok){let e=b.parentElement.querySelector(".feedback");e.textContent=ok?"✓ Correct!":"✗ Not quite. Try again.";e.className="feedback "+(ok?"good":"bad")}
+function check(id,a,out){let v=document.getElementById(id).value.trim().replace(/\s+/g,""),x=a.replace(/\s+/g,""),e=document.getElementById(out);e.textContent=v.toUpperCase()==x.toUpperCase()?"✓ Correct!":"✗ Not quite. Try again.";e.className="feedback "+(v.toUpperCase()==x.toUpperCase()?"good":"bad")}
+function build(){quiz.innerHTML=Q.map((q,i)=>`<div class="q"><b>${i+1}. ${q[0]}</b>${q.slice(1,5).map((x,j)=>`<label><input type="radio" name="q${i}" value="${String.fromCharCode(65+j)}"> ${String.fromCharCode(65+j)}. ${x}</label>`).join("")}</div>`).join("")}
+function grade(){let s=0;Q.forEach((q,i)=>{let x=document.querySelector('input[name="q'+i+'"]:checked');if(x&&x.value==q[5])s++});let p=s*10;qr.textContent=`Score: ${s}/10 (${p}%). `+(p>=80?"🎉 Passed!":"You need 80%. Review and try again.");qr.className="feedback "+(p>=80?"good":"bad");if(p>=80&&!done.includes(7)){done.push(7);localStorage.setItem(key,JSON.stringify(done));render()}if(p>=80)complete.style.display="block"}
+go(0);
+</script></body></html>

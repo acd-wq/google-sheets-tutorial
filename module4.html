@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Google Sheets Learning Hub — Module 4</title>
+<style>
+:root{--navy:#17324d;--green:#1f7a5a;--light:#eef8f3;--bg:#f6f8fa;--text:#243447;--muted:#667788;--border:#d9e1e8;--danger:#b63b3b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+header{background:var(--navy);color:#fff;padding:15px 22px;display:flex;justify-content:space-between;position:sticky;top:0;z-index:5}
+.layout{display:grid;grid-template-columns:280px 1fr;max-width:1400px;margin:auto}
+aside{background:#fff;border-right:1px solid var(--border);padding:20px;min-height:calc(100vh - 55px);position:sticky;top:55px}
+main{padding:30px;max-width:1000px}.hero{background:linear-gradient(135deg,#17324d,#24516f);color:#fff;border-radius:16px;padding:28px;margin-bottom:22px}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:23px;margin-bottom:20px}
+h1{margin:6px 0}h2{color:var(--navy)}h3{color:var(--green)}
+.progress-wrap{height:10px;background:#e5e9ed;border-radius:10px;margin:8px 0 18px}.progress{height:100%;width:0;background:var(--green)}
+.lesson-btn{width:100%;text-align:left;border:1px solid var(--border);background:#fff;border-radius:9px;padding:10px;margin:5px 0;cursor:pointer}.lesson-btn.active{background:var(--light);border-color:var(--green);font-weight:bold}.lesson-btn.done:before{content:"✓ ";color:var(--green)}
+.callout{background:var(--light);border-left:5px solid var(--green);padding:14px;margin:15px 0}.tip{background:#fff8e7;border-left-color:#c28b16}
+code{background:#eef1f4;padding:2px 5px;border-radius:4px}pre{background:#182635;color:#fff;padding:14px;border-radius:8px;overflow:auto}
+table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--border);padding:9px;text-align:left}th{background:#edf3f7}
+.question{border:1px solid var(--border);border-radius:10px;padding:15px;margin:12px 0}.options label{display:block;margin:7px 0}
+button.primary{border:0;background:var(--green);color:#fff;padding:11px 16px;border-radius:8px;font-weight:bold;cursor:pointer}button.secondary{border:1px solid var(--green);background:#fff;color:var(--green);padding:10px 15px;border-radius:8px;font-weight:bold;cursor:pointer}
+input.answer{padding:10px;border:1px solid var(--border);border-radius:7px;width:230px}.feedback{font-weight:bold;margin-top:10px}.correct{color:var(--green)}.wrong{color:var(--danger)}.hidden{display:none}.small{font-size:13px;color:var(--muted)}
+@media(max-width:800px){.layout{display:block}aside{position:static;min-height:auto;border-right:0;border-bottom:1px solid var(--border)}main{padding:18px}header{font-size:14px}}
+</style>
+</head>
+<body>
+<header><strong>📊 Google Sheets Learning Hub</strong><span>Module 4 · Logical & Conditional Functions</span></header>
+<div class="layout">
+<aside><h3>Module 4 Lessons</h3><div class="small">Your progress</div><div class="progress-wrap"><div id="bar" class="progress"></div></div><div id="pt" class="small"></div><div id="list"></div></aside>
+<main><section class="hero"><div>BEGINNER → PRACTICAL</div><h1>Module 4: Logical & Conditional Functions</h1><p>Learn to make decisions, test conditions, and summarize data based on rules.</p></section><div id="content"></div></main>
+</div>
+<script>
+const L=[
+["4.1 What Are Logical Functions?",`
+<div class="card"><h2>4.1 What Are Logical Functions?</h2>
+<p>Logical functions help Sheets answer questions such as: Did the sale reach the target? Is the order qualified?</p>
+<pre>=B2&gt;50000</pre><p>A condition produces <b>TRUE</b> or <b>FALSE</b>.</p>
+<table><tr><th>Operator</th><th>Meaning</th></tr><tr><td>=</td><td>Equal</td></tr><tr><td>&gt;</td><td>Greater than</td></tr><tr><td>&lt;</td><td>Less than</td></tr><tr><td>&gt;=</td><td>Greater than or equal</td></tr><tr><td>&lt;=</td><td>Less than or equal</td></tr><tr><td>&lt;&gt;</td><td>Not equal</td></tr></table>
+<div class="question"><b>Quick check:</b> Which formula tests whether A2 is greater than 100?
+<label><input type="radio" name="q1" value="1"> =A2&gt;100</label><label><input type="radio" name="q1" value="0"> =A2+100</label><label><input type="radio" name="q1" value="0"> =A2&lt;100</label>
+<button class="primary" onclick="radio('q1','1','f1')">Check</button><div id="f1"></div></div></div>`],
+
+["4.2 IF Function",`
+<div class="card"><h2>4.2 IF Function</h2><p><code>IF</code> lets Sheets make a simple decision.</p>
+<pre>=IF(B2&gt;=50000,"Target Met","Below Target")</pre>
+<ol><li>Condition</li><li>Value if true</li><li>Value if false</li></ol>
+<div class="callout"><b>Pattern:</b> <code>=IF(condition, value_if_true, value_if_false)</code></div>
+<p>If A2 contains 85, what does this return?</p><pre>=IF(A2&gt;=75,"Pass","Needs Review")</pre>
+<input id="a2" class="answer" placeholder="Type answer"> <button class="primary" onclick="inp('a2','Pass','f2')">Check</button><div id="f2"></div></div>`],
+
+["4.3 AND & OR",`
+<div class="card"><h2>4.3 AND & OR</h2><p><code>AND</code> is TRUE only when all conditions are true. <code>OR</code> is TRUE when at least one condition is true.</p>
+<pre>=AND(B2&gt;=50,C2="Yes")
+=OR(B2&gt;=50,C2="Yes")</pre>
+<table><tr><th>Function</th><th>Easy way to remember</th></tr><tr><td>AND</td><td>Everything must be true</td></tr><tr><td>OR</td><td>At least one must be true</td></tr></table>
+<p>If A2=80 and B2="Yes", what does <code>=AND(A2&gt;=75,B2="Yes")</code> return?</p>
+<input id="a3" class="answer" placeholder="TRUE or FALSE"> <button class="primary" onclick="inp('a3','TRUE','f3')">Check</button><div id="f3"></div></div>`],
+
+["4.4 SUMIF",`
+<div class="card"><h2>4.4 SUMIF</h2><p><code>SUMIF</code> adds values only when they meet a condition.</p>
+<pre>=SUMIF(B2:B10,"Manila",C2:C10)</pre>
+<table><tr><th>Region</th><th>Sales</th></tr><tr><td>Manila</td><td>50,000</td></tr><tr><td>Davao</td><td>30,000</td></tr><tr><td>Manila</td><td>20,000</td></tr><tr><td>Cebu</td><td>25,000</td></tr></table>
+<div class="callout"><b>Pattern:</b> <code>=SUMIF(range, criterion, sum_range)</code></div>
+<p>What is the total sales for Davao?</p><input id="a4" class="answer" placeholder="Type total"> <button class="primary" onclick="inp('a4','30000','f4')">Check</button><div id="f4"></div></div>`],
+
+["4.5 COUNTIF",`
+<div class="card"><h2>4.5 COUNTIF</h2><p><code>COUNTIF</code> counts cells that meet a condition.</p>
+<pre>=COUNTIF(B2:B20,"Manila")</pre>
+<p>Example list: Manila, Cebu, Davao, Cebu, Cebu.</p>
+<div class="callout"><b>Remember:</b> SUMIF adds matching values. COUNTIF counts matching cells.</div>
+<p>How many times does Cebu appear?</p><input id="a5" class="answer" placeholder="Type count"> <button class="primary" onclick="inp('a5','3','f5')">Check</button><div id="f5"></div></div>`],
+
+["4.6 Multiple Conditions",`
+<div class="card"><h2>4.6 Multiple Conditions</h2><p>You can combine functions to create useful business rules.</p>
+<h3>IF + AND</h3><pre>=IF(AND(B2&gt;=50000,C2="Yes"),"Qualified","Not Qualified")</pre>
+<h3>SUMIF with a cell criterion</h3><pre>=SUMIF(B2:B20,E2,C2:C20)</pre>
+<h3>COUNTIF with a numeric condition</h3><pre>=COUNTIF(C2:C20,">=50000")</pre>
+<div class="callout tip"><b>Practical habit:</b> Start with one condition. Once it works, add another.</div>
+<div class="question"><b>Which function counts sales of 50,000 or more?</b>
+<label><input type="radio" name="q6" value="0"> SUMIF</label><label><input type="radio" name="q6" value="1"> COUNTIF</label><label><input type="radio" name="q6" value="0"> AVERAGE</label>
+<button class="primary" onclick="radio('q6','1','f6')">Check</button><div id="f6"></div></div></div>`],
+
+["4.7 Practice Project",`
+<div class="card"><h2>4.7 Practice Project — Sales Performance Checker</h2>
+<table><tr><th>Salesperson</th><th>Region</th><th>Sales</th><th>Verified?</th></tr>
+<tr><td>Ana</td><td>Manila</td><td>60,000</td><td>Yes</td></tr><tr><td>Ben</td><td>Davao</td><td>40,000</td><td>Yes</td></tr><tr><td>Cara</td><td>Manila</td><td>75,000</td><td>No</td></tr><tr><td>Dan</td><td>Cebu</td><td>55,000</td><td>Yes</td></tr><tr><td>Ella</td><td>Davao</td><td>30,000</td><td>No</td></tr></table>
+<h3>Your tasks in Google Sheets</h3><ol><li>Add Target Status using IF.</li><li>Add Qualified? using IF + AND.</li><li>Use SUMIF for Manila sales.</li><li>Use COUNTIF for Davao people.</li></ol>
+<div class="callout"><b>Expected results:</b> Manila = ₱135,000 · Davao = 2 · Qualified = 2</div>
+<button class="secondary" onclick="document.getElementById('ans').classList.toggle('hidden')">Show / Hide Answers</button>
+<div id="ans" class="hidden"><pre>=IF(C2>=50000,"Target Met","Below Target")
+=IF(AND(C2>=50000,D2="Yes"),"Qualified","Not Qualified")
+=SUMIF(B2:B6,"Manila",C2:C6)
+=COUNTIF(B2:B6,"Davao")</pre></div>
+<div class="callout tip">Save this practice sheet. A similar exercise can later become part of a portfolio case study.</div></div>`],
+
+["4.8 Module Quiz",`<div class="card"><h2>4.8 Module Quiz</h2><p>You need <b>80%</b> to pass.</p><div id="quiz"></div><button class="primary" onclick="grade()">Submit Quiz</button><div id="qr"></div></div>`]
+];
+
+const Q=[
+["Which function makes a simple decision?",["IF","SUM","ROUND"],0],
+["AND is TRUE when…",["all conditions are true","one condition is true","no conditions are true"],0],
+["OR is TRUE when…",["all conditions are true","at least one condition is true","all are false"],1],
+["Which function adds values meeting a condition?",["COUNTIF","SUMIF","MAX"],1],
+["Which function counts cells meeting a condition?",["COUNTIF","SUMIF","MIN"],0],
+["IF(A2>=75,"Pass","Needs Review") with A2=80 returns…",["Pass","Needs Review","TRUE"],0],
+["SUMIF can be used to…",["count matching cells","add matching values","find the largest value"],1],
+["COUNTIF(A2:A10,">=50") counts…",["values below 50","values 50 or greater","blank cells"],1],
+["Which combination tests conditions and makes a decision?",["SUM + MAX","IF + AND","COUNT + ROUND"],1],
+["Sales=60,000 and Verified=Yes: IF(AND(...),"Qualified","Not Qualified") returns…",["Qualified","Not Qualified","FALSE"],0]
+];
+
+let cur=0;
+let done=JSON.parse(localStorage.getItem("gsModule4Completed")||"[]");
+
+function render(){
+ const list=document.getElementById("list");list.innerHTML="";
+ L.forEach((x,i)=>{let b=document.createElement("button");b.className="lesson-btn "+(i===cur?"active ":"")+(done.includes(i)?"done":"");b.textContent=(i+1)+". "+x[0];b.onclick=()=>show(i);list.appendChild(b)});
+ let p=Math.round(done.length/L.length*100);document.getElementById("bar").style.width=p+"%";document.getElementById("pt").textContent=done.length+" of "+L.length+" lessons completed ("+p+"%)";
+}
+function show(i){cur=i;document.getElementById("content").innerHTML=L[i][1];render();if(i===7)quiz();scrollTo(0,0)}
+function finish(){if(!done.includes(cur)){done.push(cur);done.sort((a,b)=>a-b);localStorage.setItem("gsModule4Completed",JSON.stringify(done))}render();if(done.length===L.length)alert("🎉 Congratulations! You completed Module 4.")}
+function inp(id,expected,fid){let v=document.getElementById(id).value.trim(),f=document.getElementById(fid);if(v.toLowerCase()===expected.toLowerCase()){f.textContent="✓ Correct!";f.className="feedback correct";finish()}else{f.textContent="Not quite. Try again.";f.className="feedback wrong"}}
+function radio(name,correct,fid){let c=document.querySelector('input[name="'+name+'"]:checked'),f=document.getElementById(fid);if(!c){f.textContent="Choose an answer first.";f.className="feedback wrong"}else if(c.value===correct){f.textContent="✓ Correct!";f.className="feedback correct";finish()}else{f.textContent="Not quite. Try again.";f.className="feedback wrong"}}
+function quiz(){let q=document.getElementById("quiz");q.innerHTML=Q.map((x,i)=>'<div class="question"><b>'+(i+1)+'. '+x[0]+'</b>'+x[1].map((o,j)=>'<label><input type="radio" name="z'+i+'" value="'+j+'"> '+o+'</label>').join("")+'</div>').join("")}
+function grade(){let s=0;Q.forEach((x,i)=>{let c=document.querySelector('input[name="z'+i+'"]:checked');if(c&&+c.value===x[2])s++});let p=Math.round(s/10*100),r=document.getElementById("qr");if(p>=80){r.textContent="🎉 Passed! "+s+"/10 ("+p+"%).";r.className="feedback correct";finish()}else{r.textContent="You scored "+s+"/10 ("+p+"%). Review the lessons and try again. You need 80%.";r.className="feedback wrong"}}
+render();show(0);
+</script>
+</body>
+</html>
