@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 9: Advanced Google Sheets & Automation</title>
+<style>
+:root{--navy:#17324d;--green:#1f7a5a;--light:#eef8f3;--bg:#f6f8fa;--text:#243447;--muted:#667788;--border:#d9e1e8}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;padding:16px 24px}
+.header-inner{max-width:1200px;margin:auto;display:flex;justify-content:space-between;gap:20px}
+header h1{font-size:20px;margin:0}header p{margin:2px 0;font-size:13px;opacity:.85}.progress-wrap{min-width:210px}
+.progress{height:9px;background:#ffffff33;border-radius:20px;overflow:hidden}.bar{height:100%;width:0;background:#fff}
+.layout{max-width:1200px;margin:auto;display:grid;grid-template-columns:250px 1fr;gap:24px;padding:24px}
+aside{position:sticky;top:88px;height:max-content;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}
+aside h3{margin:4px 8px 12px;color:var(--navy)}.lesson-btn{display:block;width:100%;text-align:left;border:0;background:transparent;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--text)}
+.lesson-btn:hover,.lesson-btn.active{background:var(--light)}.lesson-btn.active{color:var(--green);font-weight:700}.lesson-btn.done::after{content:" ✓";color:var(--green);font-weight:bold}
+main{min-width:0}.back-home{display:inline-block;margin-bottom:16px;color:var(--green);font-weight:700;text-decoration:none}.back-home:hover{text-decoration:underline}
+.hero,.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:18px}.hero{background:var(--light);border-color:#cce7da}.hero h2{margin:0 0 8px;color:var(--navy)}
+.callout{background:var(--light);border-left:4px solid var(--green);padding:14px 16px;border-radius:8px;margin:16px 0}
+.warning{background:#fff7e8;border-left:4px solid #c58a00;padding:14px 16px;border-radius:8px}
+pre{background:#17212b;color:#fff;padding:16px;border-radius:10px;overflow:auto}code{font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff}th,td{border:1px solid var(--border);padding:9px;text-align:left}th{background:#f0f4f7}
+input,select{padding:9px;border:1px solid var(--border);border-radius:7px;font-size:14px}button.action{background:var(--green);color:#fff;border:0;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:700}
+.lesson{display:none}.lesson.active{display:block}.mini{font-size:13px;color:var(--muted)}.feedback{margin-top:10px;font-weight:700;min-height:24px}.correct{color:var(--green)}.incorrect{color:#b42318}
+.quiz-q{padding:16px 0;border-bottom:1px solid var(--border)}label.option{display:block;margin:7px 0;cursor:pointer}.quiz-result{font-size:18px;font-weight:700;margin-top:18px}
+.next-row{display:flex;justify-content:space-between;margin-top:20px}
+@media(max-width:800px){.layout{grid-template-columns:1fr;padding:14px}aside{position:static}.header-inner{flex-direction:column}.progress-wrap{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><div><h1>Google Sheets Learning Hub</h1><p>Module 9 • Advanced Google Sheets & Automation</p></div>
+<div class="progress-wrap"><div id="progressLabel">0 of 8 lessons completed</div><div class="progress"><div class="bar" id="progressBar"></div></div></div></div></header>
+<div class="layout">
+<aside><h3>Module 9</h3>
+<button class="lesson-btn active" data-lesson="0">9.1 Data Validation</button>
+<button class="lesson-btn" data-lesson="1">9.2 Conditional Formatting</button>
+<button class="lesson-btn" data-lesson="2">9.3 FILTER</button>
+<button class="lesson-btn" data-lesson="3">9.4 SORT & UNIQUE</button>
+<button class="lesson-btn" data-lesson="4">9.5 QUERY</button>
+<button class="lesson-btn" data-lesson="5">9.6 ARRAYFORMULA</button>
+<button class="lesson-btn" data-lesson="6">9.7 Practice Project</button>
+<button class="lesson-btn" data-lesson="7">9.8 Module Quiz</button></aside>
+
+<main>
+<a href="index.html" class="back-home">← Back to Google Sheets Learning Hub</a>
+<section class="hero"><h2>Module 9: Advanced Google Sheets & Automation</h2><p>Learn dynamic tools that make spreadsheets easier to analyze, update, and maintain.</p></section>
+
+<section class="lesson active" id="lesson0"><div class="card"><h3>9.1 Data Validation & Dropdown Lists</h3>
+<p>Data validation controls what users can enter. Dropdowns are useful for consistent categories such as Region, Status, or Product.</p>
+<div class="callout"><strong>Example:</strong> A Region column can allow only <b>Manila, Cebu, Davao</b>.</div>
+<pre><code>Data → Data validation → Add rule → Dropdown</code></pre>
+<p><strong>Why it matters:</strong> Consistent entries make filtering, formulas, Pivot Tables, and analysis more reliable.</p>
+<h3>Quick Practice</h3><p>Why use a dropdown for a Region column?</p>
+<select id="p0"><option value="">Choose an answer</option><option>To make the sheet larger</option><option value="correct">To keep entries consistent</option><option>To automatically create a chart</option></select>
+<button class="action" onclick="checkSelect('p0','correct','f0')">Check</button><div id="f0" class="feedback"></div></div></section>
+
+<section class="lesson" id="lesson1"><div class="card"><h3>9.2 Conditional Formatting</h3>
+<p>Conditional formatting changes a cell's appearance when it meets a rule. It helps you spot targets, low sales, duplicates, and overdue items.</p>
+<table><tr><th>Sales</th><th>Possible rule</th></tr><tr><td>₱60,000</td><td>Greater than ₱50,000</td></tr><tr><td>₱30,000</td><td>Below target</td></tr><tr><td>₱75,000</td><td>Greater than ₱50,000</td></tr></table>
+<pre><code>Format → Conditional formatting</code></pre><div class="callout"><strong>Tip:</strong> Conditional formatting is visual; it does not change the underlying value.</div>
+<h3>Quick Practice</h3><p>What happens when a cell meets a conditional-formatting rule?</p>
+<select id="p1"><option value="">Choose an answer</option><option>Its value is deleted</option><option value="correct">Its appearance changes according to the rule</option><option>The spreadsheet closes</option></select>
+<button class="action" onclick="checkSelect('p1','correct','f1')">Check</button><div id="f1" class="feedback"></div></div></section>
+
+<section class="lesson" id="lesson2"><div class="card"><h3>9.3 FILTER Function</h3>
+<p><code>FILTER</code> returns only rows that meet a condition. The result updates when the source data changes.</p>
+<pre><code>=FILTER(A2:E11,D2:D11="Davao")</code></pre><p>Returns rows where Region is Davao.</p>
+<pre><code>=FILTER(A2:E11,E2:E11&gt;30000)</code></pre><p>Returns rows where Sales is greater than ₱30,000.</p>
+<div class="callout"><strong>Multiple conditions:</strong><br><code>=FILTER(A2:E11,D2:D11="Davao",E2:E11&gt;30000)</code></div>
+<h3>Quick Practice</h3><p>What does FILTER do?</p>
+<select id="p2"><option value="">Choose an answer</option><option>Creates a permanent copy only</option><option value="correct">Returns rows that meet specified conditions</option><option>Deletes rows that do not match</option></select>
+<button class="action" onclick="checkSelect('p2','correct','f2')">Check</button><div id="f2" class="feedback"></div></div></section>
+
+<section class="lesson" id="lesson3"><div class="card"><h3>9.4 SORT & UNIQUE</h3>
+<p><code>SORT</code> dynamically orders data. <code>UNIQUE</code> returns distinct values.</p>
+<pre><code>=SORT(A2:E11,5,FALSE)</code></pre><p>Sorts the range by column 5, highest to lowest.</p>
+<pre><code>=UNIQUE(D2:D11)</code></pre><p>Creates a list of unique regions.</p>
+<div class="callout"><strong>Useful combination:</strong> <code>=SORT(UNIQUE(D2:D11))</code> creates a unique sorted list.</div>
+<h3>Quick Practice</h3><p>Which function removes duplicates from a list?</p>
+<select id="p3"><option value="">Choose an answer</option><option>SORT</option><option value="correct">UNIQUE</option><option>COUNTIF</option></select>
+<button class="action" onclick="checkSelect('p3','correct','f3')">Check</button><div id="f3" class="feedback"></div></div></section>
+
+<section class="lesson" id="lesson4"><div class="card"><h3>9.5 QUERY Function — Introduction</h3>
+<p><code>QUERY</code> lets you ask questions of a range using a SQL-like language. It is useful for reports and analysis.</p>
+<pre><code>=QUERY(A1:E11,"SELECT A,B,E WHERE D='Davao'",1)</code></pre>
+<p>Selects Order ID, Date, and Sales while keeping Davao rows. The final <code>1</code> identifies one header row.</p>
+<pre><code>=QUERY(A1:E11,"SELECT D,SUM(E) GROUP BY D",1)</code></pre>
+<p>Summarizes total sales by Region.</p>
+<div class="warning"><strong>Remember:</strong> Put text criteria inside quotes, such as <code>'Davao'</code>.</div>
+<h3>Quick Practice</h3><p>Which QUERY clause filters rows?</p>
+<select id="p4"><option value="">Choose an answer</option><option>SELECT</option><option value="correct">WHERE</option><option>GROUP BY</option></select>
+<button class="action" onclick="checkSelect('p4','correct','f4')">Check</button><div id="f4" class="feedback"></div></div></section>
+
+<section class="lesson" id="lesson5"><div class="card"><h3>9.6 ARRAYFORMULA</h3>
+<p><code>ARRAYFORMULA</code> lets one formula work across multiple rows or columns instead of entering the same formula repeatedly.</p>
+<pre><code>=ARRAYFORMULA(IF(A2:A11="","",E2:E11*10%))</code></pre>
+<p>This calculates 10% of Sales for every populated row.</p>
+<div class="callout"><strong>Good use case:</strong> You add rows regularly and want one formula to handle a whole column.</div>
+<h3>Quick Practice</h3><p>What is a major benefit of ARRAYFORMULA?</p>
+<select id="p5"><option value="">Choose an answer</option><option>It deletes formulas</option><option value="correct">It can apply a formula across a range</option><option>It converts Sheets to Excel</option></select>
+<button class="action" onclick="checkSelect('p5','correct','f5')">Check</button><div id="f5" class="feedback"></div></div></section>
+
+<section class="lesson" id="lesson6"><div class="card"><h3>9.7 Practice Project — Sales Data Analyzer</h3>
+<p>Use this dataset as a workplace-style sales reporting case.</p>
+<table><tr><th>Order ID</th><th>Date</th><th>Product</th><th>Region</th><th>Sales</th></tr>
+<tr><td>1001</td><td>2026-01-05</td><td>Laptop</td><td>Manila</td><td>50000</td></tr>
+<tr><td>1002</td><td>2026-01-12</td><td>Phone</td><td>Davao</td><td>30000</td></tr>
+<tr><td>1003</td><td>2026-02-08</td><td>Tablet</td><td>Cebu</td><td>25000</td></tr>
+<tr><td>1004</td><td>2026-02-20</td><td>Laptop</td><td>Manila</td><td>50000</td></tr>
+<tr><td>1005</td><td>2026-03-03</td><td>Monitor</td><td>Davao</td><td>20000</td></tr>
+<tr><td>1006</td><td>2026-03-18</td><td>Phone</td><td>Cebu</td><td>30000</td></tr>
+<tr><td>1007</td><td>2026-04-05</td><td>Tablet</td><td>Manila</td><td>25000</td></tr>
+<tr><td>1008</td><td>2026-04-22</td><td>Monitor</td><td>Davao</td><td>20000</td></tr>
+<tr><td>1009</td><td>2026-05-09</td><td>Laptop</td><td>Cebu</td><td>50000</td></tr>
+<tr><td>1010</td><td>2026-05-25</td><td>Phone</td><td>Manila</td><td>30000</td></tr>
+</table>
+<h3>Project Tasks</h3><ol><li>Create a Region dropdown: Manila, Cebu, Davao.</li><li>Highlight Sales greater than ₱40,000.</li><li>Use <code>FILTER</code> to display Davao sales.</li><li>Use <code>UNIQUE</code> to create a product list.</li><li>Use <code>QUERY</code> to summarize sales by Region.</li><li>Use <code>ARRAYFORMULA</code> for a 10% commission column.</li></ol>
+<div class="callout"><strong>Expected:</strong> Total ₱330,000 • Manila ₱155,000 • Davao ₱70,000 • Cebu ₱105,000 • Products: Laptop, Phone, Tablet, Monitor</div>
+<h3>Project Check</h3><p>What should the QUERY summary show for Davao?</p>
+<input id="projectAnswer" type="number" placeholder="Enter sales amount">
+<button class="action" onclick="checkNumber()">Check</button><div id="projectFeedback" class="feedback"></div>
+</div></section>
+
+<section class="lesson" id="lesson7"><div class="card"><h3>9.8 Module Quiz</h3><p class="mini">Choose the best answer. You need 80% or higher to pass.</p><form id="quizForm">
+<div class="quiz-q"><b>1. What is a primary purpose of Data Validation?</b><label class="option"><input type="radio" name="q1" value="a"> Create charts</label><label class="option"><input type="radio" name="q1" value="b"> Control allowed input and keep data consistent</label><label class="option"><input type="radio" name="q1" value="c"> Delete rows</label></div>
+<div class="quiz-q"><b>2. Which function returns rows meeting conditions?</b><label class="option"><input type="radio" name="q2" value="a"> FILTER</label><label class="option"><input type="radio" name="q2" value="b"> UNIQUE</label><label class="option"><input type="radio" name="q2" value="c"> ROUND</label></div>
+<div class="quiz-q"><b>3. Which function removes duplicate values?</b><label class="option"><input type="radio" name="q3" value="a"> SORT</label><label class="option"><input type="radio" name="q3" value="b"> UNIQUE</label><label class="option"><input type="radio" name="q3" value="c"> FILTER</label></div>
+<div class="quiz-q"><b>4. In QUERY, which clause filters rows?</b><label class="option"><input type="radio" name="q4" value="a"> GROUP BY</label><label class="option"><input type="radio" name="q4" value="b"> WHERE</label><label class="option"><input type="radio" name="q4" value="c"> ORDER BY</label></div>
+<div class="quiz-q"><b>5. What does GROUP BY help you do?</b><label class="option"><input type="radio" name="q5" value="a"> Summarize values by categories</label><label class="option"><input type="radio" name="q5" value="b"> Change font size</label><label class="option"><input type="radio" name="q5" value="c"> Create dropdowns</label></div>
+<div class="quiz-q"><b>6. What is a major benefit of ARRAYFORMULA?</b><label class="option"><input type="radio" name="q6" value="a"> Apply a formula across a range</label><label class="option"><input type="radio" name="q6" value="b"> Create Pivot Tables</label><label class="option"><input type="radio" name="q6" value="c"> Hide columns</label></div>
+<div class="quiz-q"><b>7. What does conditional formatting change?</b><label class="option"><input type="radio" name="q7" value="a"> The underlying value</label><label class="option"><input type="radio" name="q7" value="b"> The appearance based on a rule</label><label class="option"><input type="radio" name="q7" value="c"> The sheet name</label></div>
+<div class="quiz-q"><b>8. Which formula creates a unique sorted region list?</b><label class="option"><input type="radio" name="q8" value="a"> =SORT(UNIQUE(D2:D11))</label><label class="option"><input type="radio" name="q8" value="b"> =SUM(D2:D11)</label><label class="option"><input type="radio" name="q8" value="c"> =COUNT(D2:D11)</label></div>
+<div class="quiz-q"><b>9. In =QUERY(A1:E11,"SELECT D,SUM(E) GROUP BY D",1), what is D?</b><label class="option"><input type="radio" name="q9" value="a"> The region/category column</label><label class="option"><input type="radio" name="q9" value="b"> The sales amount</label><label class="option"><input type="radio" name="q9" value="c"> The header count</label></div>
+<div class="quiz-q"><b>10. Why learn these functions?</b><label class="option"><input type="radio" name="q10" value="a"> To make analysis more dynamic and efficient</label><label class="option"><input type="radio" name="q10" value="b"> To avoid using data</label><label class="option"><input type="radio" name="q10" value="c"> To replace every spreadsheet feature</label></div>
+<button type="button" class="action" onclick="gradeQuiz()">Submit Quiz</button><div id="quizResult" class="quiz-result"></div>
+</form></div></section>
+
+<div class="next-row"><button class="action" onclick="changeLesson(-1)">← Previous</button><button class="action" id="nextBtn" onclick="changeLesson(1)">Next →</button></div>
+</main></div>
+<script>
+const key='gsModule9Completed';let completed=JSON.parse(localStorage.getItem(key)||'[]'),current=0;
+const lessons=document.querySelectorAll('.lesson'),buttons=document.querySelectorAll('.lesson-btn');
+function updateProgress(){buttons.forEach((b,i)=>b.classList.toggle('done',completed.includes(i)));document.getElementById('progressLabel').textContent=`${completed.length} of 8 lessons completed`;document.getElementById('progressBar').style.width=(completed.length/8*100)+'%'}
+function showLesson(i){i=Math.max(0,Math.min(7,i));current=i;lessons.forEach((l,j)=>l.classList.toggle('active',j===i));buttons.forEach((b,j)=>b.classList.toggle('active',j===i));document.getElementById('nextBtn').textContent=i===7?'Finish':'Next →';window.scrollTo({top:0,behavior:'smooth'});if(!completed.includes(i)&&i<7){completed.push(i);localStorage.setItem(key,JSON.stringify(completed));updateProgress()}}
+buttons.forEach((b,i)=>b.onclick=()=>showLesson(i));function changeLesson(d){if(current<7||d<0)showLesson(current+d);else alert('Great job! Review any lesson as needed.')}
+function checkSelect(id,answer,out){let v=document.getElementById(id).value,e=document.getElementById(out);if(v===answer){e.textContent='✓ Correct!';e.className='feedback correct'}else{e.textContent='Not quite. Try again.';e.className='feedback incorrect'}}
+function checkNumber(){let v=Number(document.getElementById('projectAnswer').value),e=document.getElementById('projectFeedback');if(v===70000){e.textContent='✓ Correct! Davao sales total ₱70,000.';e.className='feedback correct'}else{e.textContent='Not quite. Check the Davao rows and try again.';e.className='feedback incorrect'}}
+function gradeQuiz(){const a={q1:'b',q2:'a',q3:'b',q4:'b',q5:'a',q6:'a',q7:'b',q8:'a',q9:'a',q10:'a'};let s=0;Object.keys(a).forEach(q=>{let x=document.querySelector(`input[name="${q}"]:checked`);if(x&&x.value===a[q])s++});let e=document.getElementById('quizResult');if(s>=8){e.textContent=`✓ Passed! Score: ${s}/10 (${s*10}%). Module 9 completed.`;e.className='quiz-result correct';if(!completed.includes(7)){completed.push(7);localStorage.setItem(key,JSON.stringify(completed));updateProgress()}}else{e.textContent=`Score: ${s}/10 (${s*10}%). You need 80% to pass. Review and try again.`;e.className='quiz-result incorrect'}}
+updateProgress();
+</script>
+</body></html>
